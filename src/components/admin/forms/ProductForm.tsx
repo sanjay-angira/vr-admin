@@ -938,7 +938,7 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
                         : "No active registered pickup addresses"
                 }
                 disabled={!formik.values.brandId || warehousesLoading || !warehouses.length}
-                hint="Only active, Delhivery-registered warehouses are available."
+                // hint="Only active, Delhivery-registered warehouses are available."
               />
 
               <FormDropdown
