@@ -254,7 +254,7 @@ export function AdminModuleTable({ module }: AdminModuleTableProps) {
             ? (row) => {
                 const id = row.id;
                 if (id === null || id === undefined || id === "") {
-                  return `//${module}`;
+                  return `/${module}`;
                 }
                 return getAdminModuleEditPath(module, String(id));
               }

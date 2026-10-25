@@ -13,6 +13,14 @@ export type WarehouseOption = ListOption & {
   isActive: boolean;
 };
 
+function isWarehouseActive(value: unknown): boolean {
+  return (
+    value === true ||
+    value === 1 ||
+    (typeof value === "string" && ["true", "1"].includes(value.toLowerCase()))
+  );
+}
+
 export async function fetchRegisteredWarehousesOptions(
   brandId: string | number
 ): Promise<WarehouseOption[]> {
@@ -26,7 +34,7 @@ export async function fetchRegisteredWarehousesOptions(
     .filter(
       (warehouse: Record<string, unknown>) =>
         warehouse.registrationStatus === "REGISTERED" &&
-        warehouse.isActive === true
+        isWarehouseActive(warehouse.isActive)
     )
     .map((warehouse: Record<string, unknown>) => {
       const address = [
@@ -42,7 +50,7 @@ export async function fetchRegisteredWarehousesOptions(
         label: `${String(warehouse.name ?? "Warehouse")} — ${address}`,
         value: Number(warehouse.id),
         registrationStatus: String(warehouse.registrationStatus),
-        isActive: Boolean(warehouse.isActive),
+        isActive: isWarehouseActive(warehouse.isActive),
       };
     });
 }
