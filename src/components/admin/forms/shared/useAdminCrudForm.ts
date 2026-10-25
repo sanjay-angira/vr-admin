@@ -111,7 +111,7 @@ export function useAdminCrudForm<T extends Record<string, unknown>>({
           return;
         }
 
-        router.push(redirectPath ?? `//${module}`);
+        router.push(redirectPath ?? `/${module}`);
       } catch (error) {
         helpers.setStatus(getErrorMessage(error));
       } finally {

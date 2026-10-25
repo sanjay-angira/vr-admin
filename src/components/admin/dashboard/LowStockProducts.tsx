@@ -20,7 +20,7 @@ export function LowStockProducts({
           <p className="text-sm text-zinc-500">Products running low</p>
         </div>
         <Link
-          href="//products"
+          href="/products"
           className="text-sm font-medium text-zinc-900 hover:underline"
         >
           View All
@@ -63,7 +63,7 @@ export function LowStockProducts({
                   <td className="px-5 py-3.5 font-medium text-zinc-900">
                     {product.productId ? (
                       <Link
-                        href={`//products/view/${product.productId}`}
+                        href={`/products/view/${product.productId}`}
                         className="hover:underline"
                       >
                         {product.productName || product.name}

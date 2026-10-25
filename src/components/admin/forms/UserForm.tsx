@@ -109,7 +109,7 @@ export function UserForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="User"
-          onCancel={() => router.push(`//${module}`)}
+          onCancel={() => router.push(`/${module}`)}
         />
       </form>
     </AdminFormLayout>

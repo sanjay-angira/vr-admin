@@ -90,7 +90,7 @@ export function AdminForgotPasswordForm() {
         throw new Error(response.message ?? "OTP verification failed.");
       }
 
-      router.push(`//reset-password?token=${encodeURIComponent(accessToken)}`);
+      router.push(`/reset-password?token=${encodeURIComponent(accessToken)}`);
     } catch (verifyError) {
       setError(getErrorMessage(verifyError, "Invalid or expired OTP. Please try again."));
     } finally {
@@ -197,7 +197,7 @@ export function AdminForgotPasswordForm() {
       <p className="text-center text-sm text-slate-500">
         Remember your password?{" "}
         <Link
-          href={"//login"}
+          href={"/login"}
           className="font-medium text-admin-primary hover:underline"
         >
           Sign in

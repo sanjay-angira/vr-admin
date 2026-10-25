@@ -106,7 +106,7 @@ export function AdminResetPasswordForm() {
           </p>
         </div>
 
-        <Link href={"//login"}>
+        <Link href={"/login"}>
           <Button fullWidth>Continue to sign in</Button>
         </Link>
       </div>
@@ -117,12 +117,12 @@ export function AdminResetPasswordForm() {
     return (
       <div className="space-y-5 text-center">
         <ErrorMessage message="This reset link is invalid or has expired." />
-        <Link href={"//forgot-password"}>
+        <Link href={"/forgot-password"}>
           <Button fullWidth>Request a new link</Button>
         </Link>
         <p className="text-sm text-slate-500">
           <Link
-            href={"//login"}
+            href={"/login"}
             className="font-medium text-admin-primary hover:underline"
           >
             Back to sign in
@@ -166,7 +166,7 @@ export function AdminResetPasswordForm() {
 
       <p className="text-center text-sm text-slate-500">
         <Link
-          href={"//login"}
+          href={"/login"}
           className="font-medium text-admin-primary hover:underline"
         >
           Back to sign in

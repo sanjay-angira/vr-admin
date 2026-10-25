@@ -41,7 +41,7 @@ export function AdminFormLayout({
         <p className="text-sm text-red-700">{loadError}</p>
         <button
           type="button"
-          onClick={() => router.push(`//${module}`)}
+          onClick={() => router.push(`/${module}`)}
           className="mt-4 text-sm font-medium text-red-900 hover:underline"
         >
           Back to list
@@ -54,7 +54,7 @@ export function AdminFormLayout({
     <div className="space-y-6">
       <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
         <div className="mb-1 text-xs font-medium uppercase tracking-wide text-zinc-400">
-          <Link href={`//${module}`} className="hover:text-zinc-600">
+          <Link href={`/${module}`} className="hover:text-zinc-600">
             Back to list
           </Link>
         </div>

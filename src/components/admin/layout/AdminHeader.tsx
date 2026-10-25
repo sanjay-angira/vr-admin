@@ -57,7 +57,7 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
     setMenuOpen(false);
     tokenStorage.clearAdmin();
     dispatch(clearAdminAuth());
-    window.location.href = "//login";
+    window.location.href = "/login";
   }
 
   return (
@@ -137,14 +137,14 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               />
               <div className="absolute right-0 z-20 mt-2 w-48 rounded-lg border border-zinc-200 bg-white py-1 shadow-lg">
                 <Link
-                  href={"//profile"}
+                  href={"/profile"}
                   className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
                   onClick={() => setMenuOpen(false)}
                 >
                   Profile
                 </Link>
                 <Link
-                  href={"//settings"}
+                  href={"/settings"}
                   className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
                   onClick={() => setMenuOpen(false)}
                 >

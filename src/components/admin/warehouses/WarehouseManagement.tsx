@@ -330,7 +330,7 @@ export function WarehouseManagement({ brandId }: { brandId: number }) {
       <header className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
         <button
           type="button"
-          onClick={() => router.push(`//brands/edit/${brandId}`)}
+          onClick={() => router.push(`/brands/edit/${brandId}`)}
           className="mb-2 text-sm font-medium text-zinc-500 hover:text-zinc-800"
         >
           ← Back to brand

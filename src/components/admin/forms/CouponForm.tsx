@@ -154,7 +154,7 @@ export function CouponForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Coupon"
-          onCancel={() => router.push(`//${module}`)}
+          onCancel={() => router.push(`/${module}`)}
         />
       </form>
     </AdminFormLayout>

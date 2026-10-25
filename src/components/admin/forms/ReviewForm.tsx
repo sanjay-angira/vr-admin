@@ -151,7 +151,7 @@ export function ReviewForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Review"
-          onCancel={() => router.push(`//${module}`)}
+          onCancel={() => router.push(`/${module}`)}
         />
       </form>
     </AdminFormLayout>

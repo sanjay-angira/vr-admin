@@ -21,7 +21,7 @@ export function AdminSidebar({
   const pathname = usePathname();
 
   function isActive(href: string) {
-    if (href === "//dashboard") {
+    if (href === "/dashboard") {
       return pathname === href;
     }
     return pathname.startsWith(href);
@@ -41,7 +41,7 @@ export function AdminSidebar({
         }`}
       >
         <Link
-          href="//dashboard"
+          href="/dashboard"
           className={`min-w-0 ${collapsed ? "flex h-10 w-10 items-center justify-center rounded-lg bg-admin-primary" : "flex-1"}`}
           onClick={onNavigate}
           title="Admin Panel"

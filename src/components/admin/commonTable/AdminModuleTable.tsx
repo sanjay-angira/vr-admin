@@ -211,7 +211,7 @@ export function AdminModuleTable({ module }: AdminModuleTableProps) {
         }}
         actions={config.actions}
         addLabel={config.addLabel}
-        addHref={supportsAdd ? `//${module}/add` : undefined}
+        addHref={supportsAdd ? `/${module}/add` : undefined}
         searchValue={search}
         onSearchChange={setSearch}
         isSearching={isLoading && Boolean(search.trim())}

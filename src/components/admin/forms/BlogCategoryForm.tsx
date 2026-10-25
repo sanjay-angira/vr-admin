@@ -76,7 +76,7 @@ export function BlogCategoryForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Category"
-          onCancel={() => router.push(`//${module}`)}
+          onCancel={() => router.push(`/${module}`)}
         />
       </form>
     </AdminFormLayout>

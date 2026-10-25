@@ -110,7 +110,12 @@ export function AdminLoginForm() {
         })
       );
 
-      window.location.href = searchParams.get("returnUrl") || "//dashboard";
+      const returnUrl = searchParams.get("returnUrl");
+      const redirectUrl =
+        returnUrl?.startsWith("/") && !returnUrl.startsWith("//")
+          ? returnUrl
+          : "/dashboard";
+      window.location.assign(redirectUrl);
     } catch (err) {
       setError(getLoginErrorMessage(err));
     } finally {
@@ -148,7 +153,7 @@ export function AdminLoginForm() {
 
       <div className="flex justify-end">
         <Link
-          href={"//forgot-password"}
+          href={"/forgot-password"}
           className="font-medium text-admin-primary hover:underline"
         >
           Forgot password?

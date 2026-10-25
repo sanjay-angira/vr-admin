@@ -197,7 +197,7 @@ function SortableSectionRow({
           {section.status ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
         </button>
         <Link
-          href={`//website-layout/modify/${section.id}`}
+          href={`/website-layout/modify/${section.id}`}
           className="inline-flex items-center justify-center gap-2 rounded-lg border border-admin-border bg-white px-4 py-2.5 text-sm font-medium text-blue-950 transition-colors hover:bg-admin-muted"
         >
           <Pencil className="h-4 w-4" />
@@ -343,7 +343,7 @@ export function WebsiteLayoutPage() {
             </p>
           </div>
           <Link
-            href="//website-layout/add"
+            href="/website-layout/add"
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-admin-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-admin-primary-hover"
           >
             <Plus className="h-4 w-4" />
