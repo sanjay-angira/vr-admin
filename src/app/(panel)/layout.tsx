@@ -1,4 +1,4 @@
-import "@/styles/admin/index.css";
+import "@/styles/index.css";
 import { AdminPanelShell } from "@/components/admin/layout/AdminPanelShell";
 
 export default function AdminPanelLayout({
