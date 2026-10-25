@@ -107,7 +107,7 @@ export function CmsPageForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Page"
-          onCancel={() => router.push(`/admin/${module}`)}
+          onCancel={() => router.push(`//${module}`)}
         />
       </form>
     </AdminFormLayout>

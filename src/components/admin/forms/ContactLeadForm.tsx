@@ -58,7 +58,7 @@ export function ContactLeadForm({ module, recordId }: AdminFormProps) {
         await patchData(API_ENDPOINTS.CONTACT_LEADS.STATUS(recordId), {
           status: values.status,
         });
-        router.push(`/admin/${module}`);
+        router.push(`//${module}`);
       } catch (error) {
         setSubmitError(
           error && typeof error === "object" && "message" in error
@@ -171,7 +171,7 @@ export function ContactLeadForm({ module, recordId }: AdminFormProps) {
           isEdit
           isSubmitting={formik.isSubmitting}
           entityLabel="status"
-          onCancel={() => router.push(`/admin/${module}`)}
+          onCancel={() => router.push(`//${module}`)}
         />
       </form>
     </AdminFormLayout>

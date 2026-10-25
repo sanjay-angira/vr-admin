@@ -211,7 +211,7 @@ export function AdminModuleTable({ module }: AdminModuleTableProps) {
         }}
         actions={config.actions}
         addLabel={config.addLabel}
-        addHref={supportsAdd ? `/admin/${module}/add` : undefined}
+        addHref={supportsAdd ? `//${module}/add` : undefined}
         searchValue={search}
         onSearchChange={setSearch}
         isSearching={isLoading && Boolean(search.trim())}
@@ -254,7 +254,7 @@ export function AdminModuleTable({ module }: AdminModuleTableProps) {
             ? (row) => {
                 const id = row.id;
                 if (id === null || id === undefined || id === "") {
-                  return `/admin/${module}`;
+                  return `//${module}`;
                 }
                 return getAdminModuleEditPath(module, String(id));
               }

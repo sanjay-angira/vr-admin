@@ -117,7 +117,7 @@ export function BannerForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Banner"
-          onCancel={() => router.push(`/admin/${module}`)}
+          onCancel={() => router.push(`//${module}`)}
         />
       </form>
     </AdminFormLayout>

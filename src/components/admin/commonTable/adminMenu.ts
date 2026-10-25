@@ -15,7 +15,7 @@ export const adminMenuSections: AdminMenuSection[] = [
     items: [
       {
         label: "Dashboard",
-        href: "/admin/dashboard",
+        href: "//dashboard",
         icon: "layout-dashboard",
       },
     ],
@@ -25,22 +25,22 @@ export const adminMenuSections: AdminMenuSection[] = [
     items: [
       {
         label: "Products",
-        href: "/admin/products",
+        href: "//products",
         icon: "package",
       },
       {
         label: "Categories",
-        href: "/admin/categories",
+        href: "//categories",
         icon: "layout-grid",
       },
       {
         label: "Brands",
-        href: "/admin/brands",
+        href: "//brands",
         icon: "award",
       },
       {
         label: "Attributes",
-        href: "/admin/attributes",
+        href: "//attributes",
         icon: "sliders-horizontal",
       },
     ],
@@ -50,17 +50,17 @@ export const adminMenuSections: AdminMenuSection[] = [
     items: [
       {
         label: "Offers & Deals",
-        href: "/admin/offers",
+        href: "//offers",
         icon: "percent",
       },
       {
         label: "Coupons",
-        href: "/admin/coupons",
+        href: "//coupons",
         icon: "ticket",
       },
       {
         label: "Banners",
-        href: "/admin/banners",
+        href: "//banners",
         icon: "image",
       },
     ],
@@ -70,17 +70,17 @@ export const adminMenuSections: AdminMenuSection[] = [
     items: [
       {
         label: "CMS Pages",
-        href: "/admin/cms-pages",
+        href: "//cms-pages",
         icon: "file-text",
       },
       {
         label: "Reviews",
-        href: "/admin/reviews",
+        href: "//reviews",
         icon: "star",
       },
       {
         label: "Website layout",
-        href: "/admin/website-layout",
+        href: "//website-layout",
         icon: "layout-template",
       },
     ],
@@ -90,17 +90,17 @@ export const adminMenuSections: AdminMenuSection[] = [
     items: [
       {
         label: "Blog Posts",
-        href: "/admin/blogs",
+        href: "//blogs",
         icon: "newspaper",
       },
       {
         label: "Blog Categories",
-        href: "/admin/blog-categories",
+        href: "//blog-categories",
         icon: "folder-tree",
       },
       {
         label: "Blog Tags",
-        href: "/admin/blog-tags",
+        href: "//blog-tags",
         icon: "hash",
       },
     ],
@@ -110,32 +110,32 @@ export const adminMenuSections: AdminMenuSection[] = [
     items: [
       {
         label: "Orders",
-        href: "/admin/orders",
+        href: "//orders",
         icon: "clipboard-list",
       },
       {
         label: "User",
-        href: "/admin/customers",
+        href: "//customers",
         icon: "users",
       },
       {
         label: "Delete Requests",
-        href: "/admin/delete-requests",
+        href: "//delete-requests",
         icon: "user-x",
       },
       {
         label: "Product Reviews",
-        href: "/admin/product-reviews",
+        href: "//product-reviews",
         icon: "message-square-text",
       },
       {
         label: "Product FAQ",
-        href: "/admin/product-faq",
+        href: "//product-faq",
         icon: "message-circle-question",
       },
       {
         label: "Contact Us Leads",
-        href: "/admin/contact-us-leads",
+        href: "//contact-us-leads",
         icon: "mail",
       },
     ],
@@ -144,7 +144,7 @@ export const adminMenuSections: AdminMenuSection[] = [
     title: "System",
     items: [
       {
-        href: "/admin/settings",
+        href: "//settings",
         label: "Settings",
         icon: "settings",
       },

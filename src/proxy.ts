@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { homepageLinkPreviewHtml, isLinkPreviewBot } from "@/lib/linkPreview";
 import { STORAGE_KEYS } from "@/services/api/storage";
 
 const ADMIN_PUBLIC_PATHS = new Set([
-  "/admin/login",
-  "/admin/forgot-password",
-  "/admin/reset-password",
+  "/login",
+  "/forgot-password",
+  "/reset-password",
 ]);
 
 function hasAdminSession(request: NextRequest): boolean {
@@ -16,43 +15,33 @@ function hasAdminSession(request: NextRequest): boolean {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (
-    pathname === "/" &&
-    isLinkPreviewBot(request.headers.get("user-agent"))
-  ) {
-    return new NextResponse(homepageLinkPreviewHtml(), {
-      status: 200,
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
-      },
-    });
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === "/admin" ? "/" : pathname.slice("/admin".length);
+    return NextResponse.redirect(url);
   }
 
-  if (pathname === "/admin" || pathname === "/admin/") {
+  if (pathname === "/") {
     if (hasAdminSession(request)) {
-      return NextResponse.redirect(new URL("/admin/dashboard",request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-    return NextResponse.redirect(new URL("/admin/login",request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (ADMIN_PUBLIC_PATHS.has(pathname)) {
     if (hasAdminSession(request)) {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/admin")) {
-    if (!hasAdminSession(request)) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
-    return NextResponse.next();
+  if (!hasAdminSession(request)) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/admin", "/admin/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };

@@ -89,7 +89,7 @@ export function ProductFaqForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="FAQ"
-          onCancel={() => router.push(`/admin/${module}`)}
+          onCancel={() => router.push(`//${module}`)}
         />
       </form>
     </AdminFormLayout>

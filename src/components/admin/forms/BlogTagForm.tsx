@@ -59,7 +59,7 @@ export function BlogTagForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Tag"
-          onCancel={() => router.push(`/admin/${module}`)}
+          onCancel={() => router.push(`//${module}`)}
         />
       </form>
     </AdminFormLayout>

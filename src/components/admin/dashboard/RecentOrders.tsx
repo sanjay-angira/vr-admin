@@ -56,7 +56,7 @@ export function RecentOrders({ orders, loading = false }: RecentOrdersProps) {
           <p className="text-sm text-zinc-500">Latest transactions</p>
         </div>
         <Link
-          href="/admin/orders"
+          href="//orders"
           className="text-sm font-medium text-zinc-900 hover:underline"
         >
           View all
@@ -95,7 +95,7 @@ export function RecentOrders({ orders, loading = false }: RecentOrdersProps) {
                 >
                   <td className="px-5 py-3.5 font-medium text-zinc-900">
                     <Link
-                      href={`/admin/orders/view/${order.id}`}
+                      href={`//orders/view/${order.id}`}
                       className="hover:underline"
                     >
                       {order.orderNumber}

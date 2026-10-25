@@ -15,7 +15,7 @@ npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The root page redirects to `/admin/dashboard`; unauthenticated users are sent to the admin login.
+Open [http://localhost:3000](http://localhost:3000). The root page redirects to `/dashboard` when signed in and `/login` otherwise. Admin pages use direct routes such as `/products` and `/settings`, without an `/admin` prefix.
 
 Set `NEXT_PUBLIC_API_URL` in `.env.local` to the backend API base URL, for example:
 

@@ -111,7 +111,7 @@ export function AttributeForm({ module, recordId }: AdminFormProps) {
             isEdit={isEdit}
             isSubmitting={formik.isSubmitting}
             entityLabel="Attribute"
-            onCancel={() => router.push(`/admin/${module}`)}
+            onCancel={() => router.push(`//${module}`)}
           />
         </form>
       </FormikProvider>

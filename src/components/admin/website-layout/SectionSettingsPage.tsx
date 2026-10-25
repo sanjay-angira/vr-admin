@@ -290,7 +290,7 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
       } else {
         await postData(API_ENDPOINTS.CMS_SECTIONS.CREATE, payload);
       }
-      router.push("/admin/website-layout");
+      router.push("//website-layout");
     } catch {
       setError(`Failed to ${isEdit ? "update" : "create"} section.`);
     }
@@ -308,7 +308,7 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
     <div className="space-y-6">
       <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
         <div className="mb-1 text-xs font-medium uppercase tracking-wide text-zinc-400">
-          <Link href="/admin/website-layout" className="hover:text-zinc-600">
+          <Link href="//website-layout" className="hover:text-zinc-600">
             Back to homepage builder
           </Link>
         </div>
@@ -551,7 +551,7 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
 
             <div className="mt-6 flex justify-end gap-3 border-t border-zinc-100 pt-6">
               <Link
-                href="/admin/website-layout"
+                href="//website-layout"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-admin-border bg-white px-4 py-2.5 text-sm font-medium text-blue-950 transition-colors hover:bg-admin-muted"
               >
                 Cancel

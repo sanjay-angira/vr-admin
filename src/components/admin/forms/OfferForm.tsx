@@ -146,7 +146,7 @@ export function OfferForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Offer"
-          onCancel={() => router.push(`/admin/${module}`)}
+          onCancel={() => router.push(`//${module}`)}
         />
       </form>
     </AdminFormLayout>

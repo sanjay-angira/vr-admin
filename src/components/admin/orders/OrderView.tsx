@@ -251,7 +251,7 @@ export function OrderView({ module, recordId }: AdminViewProps) {
     return (
       <div className="space-y-4">
         <Link
-          href="/admin/orders"
+          href="//orders"
           className="text-sm font-medium text-zinc-700 hover:underline"
         >
           ← Back to orders
@@ -295,7 +295,7 @@ export function OrderView({ module, recordId }: AdminViewProps) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <Link
-            href="/admin/orders"
+            href="//orders"
             className="text-sm font-medium text-zinc-700 hover:underline"
           >
             ← Back to orders

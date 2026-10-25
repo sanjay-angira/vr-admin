@@ -266,14 +266,14 @@ export function getAdminModuleEditPath(
   module: string,
   id: string | number,
 ): string {
-  return `/admin/${module}/edit/${id}`;
+  return `//${module}/edit/${id}`;
 }
 
 export function getAdminModuleViewPath(
   module: string,
   id: string | number,
 ): string {
-  return `/admin/${module}/view/${id}`;
+  return `//${module}/view/${id}`;
 }
 
 export function getVisibleAdminColumns(

@@ -123,7 +123,7 @@ export function BrandForm({ module, recordId }: AdminFormProps) {
             <button
               type="button"
               onClick={() =>
-                router.push(`/admin/brands/${recordId}/warehouses`)
+                router.push(`//brands/${recordId}/warehouses`)
               }
               className="rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
             >
@@ -166,7 +166,7 @@ export function BrandForm({ module, recordId }: AdminFormProps) {
           isEdit={isEdit}
           isSubmitting={formik.isSubmitting}
           entityLabel="Brand"
-          onCancel={() => router.push(`/admin/${module}`)}
+          onCancel={() => router.push(`//${module}`)}
         />
       </form>
     </AdminFormLayout>
