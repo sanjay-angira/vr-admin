@@ -8,7 +8,6 @@ export const API_ENDPOINTS = {
     RESET_PASSWORD: "auth/reset-password",
     CHANGE_PASSWORD: "auth/change-password",
     REFRESH_TOKEN: "auth/refresh-token",
-    CHECK_EMAIL_EXISTS: (email: string) => `auth/checkEmailExists/${email}`,
     GET_USER: (id: number | string) => `auth/${id}`,
   },
 
@@ -109,7 +108,6 @@ export const API_ENDPOINTS = {
 
   COUPONS: {
     LIST: "coupons",
-    PUBLIC_LIST: "coupons/public",
     CREATE: "coupons",
     DETAILS: (id: number | string) => `coupons/${id}`,
     BY_CODE: (code: string) => `coupons/code/${code}`,
@@ -181,73 +179,16 @@ export const API_ENDPOINTS = {
 
   CMS_PAGES: {
     LIST: "cms-pages",
-    PUBLIC_LIST: "cms-pages/public",
     CREATE: "cms-pages",
     DETAILS: (id: number | string) => `cms-pages/${id}`,
     UPDATE: (id: number | string) => `cms-pages/${id}`,
     DELETE: (id: number | string) => `cms-pages/${id}`,
-    BY_SLUG: (slug: string) => `cms-pages/slug/${slug}`,
   },
 
   CONTACT_LEADS: {
     LIST: "contact-us-leads",
     DETAILS: (id: number | string) => `contact-us-leads/${id}`,
     STATUS: (id: number | string) => `contact-us-leads/${id}/status`,
-    SEND_OTP: "customer/contact-us/send-otp",
-    VERIFY_OTP: "customer/contact-us/verify-otp",
-  },
-
-  CUSTOMER_AUTH: {
-    SEND_WHATSAPP_OTP: "customer/auth/send-whatsapp-otp",
-    VERIFY_WHATSAPP_OTP: "customer/auth/verify-whatsapp-otp",
-    COMPLETE_PROFILE: "customer/auth/complete-profile",
-    VERIFY_EMAIL_OTP: "customer/auth/verify-email-otp",
-    RESEND_EMAIL_OTP: "customer/auth/resend-email-otp",
-    REFRESH_TOKEN: "customer/auth/refresh-token",
-  },
-
-  SHIPPING: {
-    CHECK_PIN: "shipping/serviceability",
-    REVERSE_GEOCODE: "shipping/location",
-    ESTIMATE: "shipping/estimate",
-  },
-
-  CUSTOMER: {
-    HOMEPAGE: "customer/homepage",
-    HOMEPAGE_BANNERS: "customer/banners",
-    SITEMAP: "customer/sitemap",
-    STORE_PRODUCTS: "customer/all-products",
-    PRODUCT_DETAILS: (slug: string) => `customer/product/${slug}`,
-    STORE_FILTERS: "customer/store-filters",
-    SEARCH: "customer/search",
-    CATEGORIES: "customer/categories",
-    BLOGS: "customer/blogs",
-    BLOG_FILTERS: "customer/blog-filters",
-    BLOG_DETAILS: (slug: string) => `customer/blog/${slug}`,
-    ADD_CART: "customer/add-cart-item",
-    GET_CART: "customer/get-cart-items",
-    UPDATE_CART: "customer/update-cart-item",
-    CLEAR_CART: "customer/clear-cart",
-    CART_COUNT: "customer/cart-count",
-    REMOVE_CART: (id: number | string) => `customer/remove-cart-item/${id}`,
-    CHECKOUT: "customer/checkout",
-    APPLY_COUPON: "customer/apply-coupon",
-    RAZORPAY_VERIFY: "customer/payments/razorpay/verify",
-    ORDER_DETAILS: (orderNumber: string) => `customer/order/${orderNumber}`,
-    ORDERS: "customer/orders",
-    ADDRESSES: "customer/addresses",
-    ADDRESS_BY_ID: (id: number | string) => `customer/addresses/${id}`,
-    ADDRESS_DEFAULT: (id: number | string) =>
-      `customer/addresses/${id}/default`,
-    WISHLIST: "customer/wishlist",
-    WISHLIST_IDS: "customer/wishlist/ids",
-    WISHLIST_COUNT: "customer/wishlist/count",
-    WISHLIST_TOGGLE: "customer/wishlist/toggle",
-    WISHLIST_BY_ID: (id: number | string) => `customer/wishlist/${id}`,
-    WISHLIST_BY_VARIATION: (variationId: number | string) =>
-      `customer/wishlist/by-variation/${variationId}`,
-    RECENTLY_VIEWED: "customer/recently-viewed",
-    REVIEWS: "customer/reviews",
   },
 
   ORDERS: {

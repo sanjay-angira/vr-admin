@@ -13,30 +13,20 @@ export const axiosInstance = axios.create({
   },
 });
 
-type AuthScope = "admin" | "customer";
 type AuthRequestConfig = InternalAxiosRequestConfig & {
   skipAuth?: boolean;
   authRetry?: boolean;
 };
 
-const pendingRefresh: Partial<Record<AuthScope, Promise<string>>> = {};
+let pendingRefresh: Promise<string> | undefined;
 
-function isCustomerRequest(url?: string): boolean {
-  return url?.replace(/^\/+/, "").startsWith("customer/") ?? false;
-}
-
-function refreshAccessToken(
-  scope: AuthScope,
-  refreshToken: string,
-): Promise<string> {
-  if (!pendingRefresh[scope]) {
-    pendingRefresh[scope] = getNewAccessToken(refreshToken, scope).finally(
-      () => {
-        delete pendingRefresh[scope];
-      },
-    );
+function refreshAccessToken(refreshToken: string): Promise<string> {
+  if (!pendingRefresh) {
+    pendingRefresh = getNewAccessToken(refreshToken).finally(() => {
+      pendingRefresh = undefined;
+    });
   }
-  return pendingRefresh[scope]!;
+  return pendingRefresh;
 }
 
 axiosInstance.interceptors.request.use(
@@ -46,18 +36,11 @@ axiosInstance.interceptors.request.use(
       return req;
     }
 
-    const scope: AuthScope = isCustomerRequest(req.url) ? "customer" : "admin";
-    const refreshToken =
-      scope === "customer"
-        ? Cookies.get(STORAGE_KEYS.userRefreshToken)
-        : Cookies.get(STORAGE_KEYS.adminRefreshToken);
-    let accessToken =
-      scope === "customer"
-        ? Cookies.get(STORAGE_KEYS.userAccessToken)
-        : Cookies.get(STORAGE_KEYS.adminAccessToken);
+    const refreshToken = Cookies.get(STORAGE_KEYS.adminRefreshToken);
+    let accessToken = Cookies.get(STORAGE_KEYS.adminAccessToken);
 
     if (!accessToken && refreshToken) {
-      accessToken = await refreshAccessToken(scope, refreshToken);
+      accessToken = await refreshAccessToken(refreshToken);
     }
 
     if (accessToken) {
@@ -86,18 +69,12 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const scope: AuthScope = isCustomerRequest(request.url)
-      ? "customer"
-      : "admin";
-    const refreshToken =
-      scope === "customer"
-        ? Cookies.get(STORAGE_KEYS.userRefreshToken)
-        : Cookies.get(STORAGE_KEYS.adminRefreshToken);
+    const refreshToken = Cookies.get(STORAGE_KEYS.adminRefreshToken);
     if (!refreshToken) return Promise.reject(error);
 
     request.authRetry = true;
     try {
-      const accessToken = await refreshAccessToken(scope, refreshToken);
+      const accessToken = await refreshAccessToken(refreshToken);
       request.headers.Authorization = `Bearer ${accessToken}`;
       return axiosInstance.request(request);
     } catch (refreshError) {

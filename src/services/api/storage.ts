@@ -2,17 +2,11 @@ import Cookies from "js-cookie";
 
 const AUTH_COOKIE_OPTIONS = { expires: 7, path: "/", sameSite: "lax" as const };
 export const STORAGE_KEYS = {
-  accessToken: "access-token",
-  refreshToken: "refresh-token",
   adminAccessToken: "admin_access_token",
   adminRefreshToken: "admin_refresh_token",
   adminUser: "admin_user",
   adminPermissions: "admin_permissions",
   adminSession: "admin_session",
-  userAccessToken: "user_access_token",
-  userRefreshToken: "user_refresh_token",
-  userProfile: "user_profile",
-  userSession: "user_session",
 } as const;
 
 
@@ -75,22 +69,6 @@ export const tokenStorage = {
     removeCookie(STORAGE_KEYS.adminAccessToken);
     removeCookie(STORAGE_KEYS.adminRefreshToken);
     removeCookie(STORAGE_KEYS.adminSession);
-  },
-  
-  getUserAccessToken: () => Cookies.get(STORAGE_KEYS.userAccessToken) ?? null,
-  setUserAccessToken: (token: string) => {
-    setCookie(STORAGE_KEYS.userAccessToken, token);
-    setCookie(STORAGE_KEYS.userSession, "1");
-  },
-  getUserRefreshToken: () => Cookies.get(STORAGE_KEYS.userRefreshToken) ?? null,
-  setUserRefreshToken: (token: string) => {
-    setCookie(STORAGE_KEYS.userRefreshToken, token);
-  },
-  clearUser: () => {
-    removeItem(STORAGE_KEYS.userProfile);
-    removeCookie(STORAGE_KEYS.userAccessToken);
-    removeCookie(STORAGE_KEYS.userRefreshToken);
-    removeCookie(STORAGE_KEYS.userSession);
   },
   hasAdminSession: () => tokenStorage.getAdminAccessToken() !== null,
 };

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Ensure admin/website TSX are scanned for utility classes (Turbopack + Tailwind v4) */
+/* Ensure admin TSX is scanned for utility classes (Turbopack + Tailwind v4) */
 @source "../components/**/*.{tsx,ts}";
 @source "../app/**/*.{tsx,ts}";
 
