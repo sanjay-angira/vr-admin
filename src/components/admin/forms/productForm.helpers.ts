@@ -256,7 +256,6 @@ export type ProductFormValues = {
   productName: string;
   shortDescription: string;
   description: string;
-  publishStatus: string;
   warehouseId: string;
   category: string;
   childCategories: string[];
@@ -300,7 +299,6 @@ export const productFormInitialValues: ProductFormValues = {
   productName: "",
   shortDescription: "",
   description: "",
-  publishStatus: "draft",
   warehouseId: "",
   category: "",
   childCategories: [],
@@ -503,7 +501,6 @@ export function buildProductPayload(
     productName: values.productName,
     shortDescription: values.shortDescription,
     description: values.description,
-    publishStatus: values.publishStatus,
     isActive: values.isActive,
     isFeatured: values.isFeatured,
     newArrival: values.newArrival,
@@ -630,13 +627,11 @@ export function isProductStepValid(
         Boolean(values.productName?.trim()) &&
         Boolean(values.shortDescription?.trim()) &&
         Boolean(descriptionText) &&
-        Boolean(values.warehouseId) &&
         categorySelected &&
         displayValid &&
         !hasFieldError(errors, "productName") &&
         !hasFieldError(errors, "shortDescription") &&
         !hasFieldError(errors, "description") &&
-        !hasFieldError(errors, "warehouseId") &&
         !hasFieldError(errors, "category")
       );
     }
@@ -667,8 +662,10 @@ export function isProductStepValid(
       );
     case 4:
       return (
-        Boolean(values.publishStatus) &&
-        !hasFieldError(errors, "publishStatus")
+        Boolean(values.warehouseId) &&
+        !hasFieldError(errors, "warehouseId") &&
+        typeof values.isActive === "boolean" &&
+        !hasFieldError(errors, "isActive")
       );
     default:
       return false;
@@ -676,8 +673,8 @@ export function isProductStepValid(
 }
 
 export const STEP_TOUCH_FIELDS: Record<number, string[]> = {
-  1: ["productName", "shortDescription", "description", "warehouseId", "category", "childCategories", "attributeIds", "attributeCustomerDisplay"],
+  1: ["productName", "shortDescription", "description", "category", "childCategories", "attributeIds", "attributeCustomerDisplay"],
   2: ["variants"],
   3: ["seo.metaTitle", "seo.metaDescription", "seo.metaKeywords", "seo.canonicalUrl", "seo.ogImage"],
-  4: ["publishStatus", "isActive"],
+  4: ["warehouseId", "productTags", "isActive"],
 };

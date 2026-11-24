@@ -33,7 +33,6 @@ type Values = {
   description: string;
   parentId: string;
   offerIds: number[];
-  publishStatus: string;
   isActive: boolean;
   showOnHomePage: boolean;
   useAsHeroBanner: boolean;
@@ -75,7 +74,7 @@ const META_TITLE_MAX = 70;
 const META_DESC_MAX = 320;
 
 const STEP_TOUCH_FIELDS: Record<number, Array<keyof Values>> = {
-  1: ["categoryName", "shortDescription", "description", "publishStatus"],
+  1: ["categoryName", "shortDescription", "description"],
   2: [],
   3: ["metaTitle", "metaDescription"],
 };
@@ -86,7 +85,6 @@ const initialValues: Values = {
   description: "",
   parentId: "",
   offerIds: [],
-  publishStatus: "draft",
   isActive: true,
   showOnHomePage: false,
   useAsHeroBanner: false,
@@ -122,7 +120,6 @@ const schema = Yup.object({
   description: htmlMinLength("Description", 3),
   parentId: Yup.string(),
   offerIds: Yup.array().of(Yup.number()),
-  publishStatus: Yup.string().oneOf(["draft", "published"]).required(),
   isActive: activeField,
   showOnHomePage: Yup.boolean(),
   useAsHeroBanner: Yup.boolean(),
@@ -162,11 +159,9 @@ function isCategoryStepValid(step: number, values: Values, errors: Record<string
       values.categoryName.trim().length >= 3 &&
       values.shortDescription.trim().length >= 3 &&
       stripHtml(values.description).length >= 3 &&
-      Boolean(values.publishStatus) &&
       !errors.categoryName &&
       !errors.shortDescription &&
-      !errors.description &&
-      !errors.publishStatus
+      !errors.description
     );
   }
 
@@ -235,7 +230,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
     validationSchema: schema,
     mapRecordToValues: (r) => {
       const seo = (r.seo ?? {}) as Record<string, unknown>;
-      const publishStatus = String(r.publishStatus ?? "draft");
       return {
         categoryName: String(r.categoryName ?? ""),
         shortDescription: String(r.shortDescription ?? ""),
@@ -246,7 +240,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
           : Array.isArray(r.offerIds)
             ? (r.offerIds as number[])
             : [],
-        publishStatus: publishStatus === "published" ? "published" : "draft",
         isActive: Boolean(r.isActive ?? true),
         showOnHomePage: Boolean(r.showOnHomePage ?? false),
         useAsHeroBanner: Boolean(r.useAsHeroBanner ?? false),
@@ -284,7 +277,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
       description: v.description,
       parentId: v.parentId ? Number(v.parentId) : null,
       offerIds: (v.offerIds ?? []).map((id) => Number(id)).filter((id) => Number.isFinite(id)),
-      publishStatus: v.publishStatus,
       isActive: v.isActive,
       showOnHomePage: v.showOnHomePage,
       useAsHeroBanner: v.useAsHeroBanner,
@@ -380,7 +372,19 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
 
         {currentStep === 1 && (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <FormInput formik={formik} name="categoryName" label="Category Name" required />
+            <FormInput
+              formik={formik}
+              name="categoryName"
+              label="Category Name"
+              required
+            />
+            <FormSelect
+              formik={formik}
+              name="parentId"
+              label="Select Parent Category"
+              options={categories}
+              placeholder="Select a Parent Category"
+            />
             <FormFullWidth>
               <FormInput
                 formik={formik}
@@ -388,7 +392,7 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
                 label="Short Description"
                 required
                 maxLength={SHORT_DESC_MAX}
-                hint={`${formik.values.shortDescription.length}/${SHORT_DESC_MAX}`}
+                // hint={`${formik.values.shortDescription.length}/${SHORT_DESC_MAX}`}
               />
             </FormFullWidth>
             <FormFullWidth>
@@ -401,31 +405,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
                 placeholder="Category description..."
               />
             </FormFullWidth>
-            <FormFullWidth>
-              <FormMultiSelect
-                formik={formik}
-                name="offerIds"
-                label="Select Offers"
-                options={offers}
-              />
-            </FormFullWidth>
-            <FormSelect
-              formik={formik}
-              name="parentId"
-              label="Select Parent Category"
-              options={categories}
-              placeholder="Select a Parent Category"
-            />
-            <FormSelect
-              formik={formik}
-              name="publishStatus"
-              label="Publish Status"
-              required
-              options={[
-                { label: "Draft", value: "draft" },
-                { label: "Published", value: "published" },
-              ]}
-            />
           </div>
         )}
 
@@ -471,16 +450,14 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
               imageType="category"
               previewMode="full"
             />
-            <FormFullWidth>
-              <FormImageUpload
-                formik={formik}
-                name="video"
-                label="Category Video"
-                uploadPath={UPLOAD_PATHS.categories.video}
-                mediaType="video"
-                previewMode="full"
-              />
-            </FormFullWidth>
+            <FormImageUpload
+              formik={formik}
+              name="video"
+              label="Category Video"
+              uploadPath={UPLOAD_PATHS.categories.video}
+              mediaType="video"
+              previewMode="full"
+            />
           </div>
         )}
 
@@ -636,25 +613,35 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
 
         {currentStep === 4 && (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <StatusToggle
-              label="Active Status"
-              checked={formik.values.isActive}
-              onChange={() => void formik.setFieldValue("isActive", !formik.values.isActive)}
-            />
-            <StatusToggle
-              label="Show On Home Page"
-              checked={formik.values.showOnHomePage}
-              onChange={() =>
-                void formik.setFieldValue("showOnHomePage", !formik.values.showOnHomePage)
-              }
-            />
-            <StatusToggle
-              label="Use as Hero Banner"
-              checked={formik.values.useAsHeroBanner}
-              onChange={() =>
-                void formik.setFieldValue("useAsHeroBanner", !formik.values.useAsHeroBanner)
-              }
-            />
+            <FormFullWidth>
+              <FormMultiSelect
+                formik={formik}
+                name="offerIds"
+                label="Select Offers"
+                options={offers}
+              />
+            </FormFullWidth>
+            <div className="col-span-full grid grid-cols-1 gap-5 md:grid-cols-4">
+              <StatusToggle
+                label="Active Status"
+                checked={formik.values.isActive}
+                onChange={() => void formik.setFieldValue("isActive", !formik.values.isActive)}
+              />
+              <StatusToggle
+                label="Show On Home Page"
+                checked={formik.values.showOnHomePage}
+                onChange={() =>
+                  void formik.setFieldValue("showOnHomePage", !formik.values.showOnHomePage)
+                }
+              />
+              <StatusToggle
+                label="Use as Hero Banner"
+                checked={formik.values.useAsHeroBanner}
+                onChange={() =>
+                  void formik.setFieldValue("useAsHeroBanner", !formik.values.useAsHeroBanner)
+                }
+              />
+            </div>
           </div>
         )}
 

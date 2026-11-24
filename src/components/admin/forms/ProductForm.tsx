@@ -106,7 +106,6 @@ const schema = Yup.object({
   productName: requiredString("Product name", 2),
   shortDescription: requiredString("Short description", 2),
   description: htmlMinLength("Description", 2),
-  publishStatus: Yup.string().oneOf(["draft", "published", "scheduled"]).required(),
   warehouseId: Yup.string().required("Pickup address is required"),
   category: Yup.string(),
   childCategories: Yup.array().of(Yup.string()),
@@ -254,7 +253,7 @@ function VariantPanel({
                 error={getNestedError(formik.touched, formik.errors, `${prefix}.price`)}
               // hint="What the customer pays. Offers only raise the crossed MRP (e.g. ₹1000 + 50% off → MRP ₹2000)."
               />
-               <Input
+              <Input
                 label="Stock"
                 required
                 name={`${prefix}.stock`}
@@ -333,7 +332,7 @@ function VariantPanel({
               />
             </div>
 
-           
+
             <div className="col-span-full">
               <FormQuillEditor
                 label="Variant Description"
@@ -586,7 +585,6 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
         productName: String(record.productName ?? ""),
         shortDescription: String(record.shortDescription ?? ""),
         description: String(record.description ?? ""),
-        publishStatus: String(record.publishStatus ?? "draft"),
         warehouseId: String(record.warehouseId ?? (record.warehouse as { id?: number })?.id ?? ""),
         category: String((record.category as { id?: number })?.id ?? record.category ?? ""),
         childCategories: [],
@@ -796,28 +794,12 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
 
           {currentStep === 1 && (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              <FormInput formik={formik} name="productName" label="Product Name" required />
-              <FormDropdown
-                label="Pickup address"
+              <FormInput
+                formik={formik}
+                name="productName"
+                label="Product Name"
                 required
-                value={formik.values.warehouseId}
-                onChange={(value) => formik.setFieldValue("warehouseId", value)}
-                onBlur={() => formik.setFieldTouched("warehouseId", true)}
-                error={
-                  getNestedError(formik.touched, formik.errors, "warehouseId") ||
-                  warehouseLoadError
-                }
-                options={warehouses}
-                placeholder={
-                  warehouseLoadError
-                    ? "Could not load pickup addresses"
-                    : warehouses.length
-                      ? "Select a pickup address"
-                      : "No active registered pickup addresses"
-                }
-                disabled={!warehouses.length}
               />
-
               <FormDropdown
                 label="Category"
                 required
@@ -862,26 +844,7 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
                 />
               </FormFullWidth>
 
-
-
-              {/* <FormFullWidth> */}
-                <FormMultiDropdown
-                  label="Product Tags"
-                  value={formik.values.productTags}
-                  onChange={(values) => formik.setFieldValue("productTags", values)}
-                  options={tags}
-                  placeholder="Select or create tags"
-                  creatable
-                  createLabel="Add tag"
-                  createPlaceholder="New tag name"
-                  onCreate={handleCreateTag}
-                  deletable
-                  onDeleteOption={handleDeleteTag}
-                />
-              {/* </FormFullWidth> */}
-
-
-              {/* <FormFullWidth> */}
+              <FormFullWidth>
                 <FormMultiDropdown
                   label="Product Attributes"
                   value={formik.values.attributeIds}
@@ -912,6 +875,7 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
                   options={attributes}
                   placeholder="Select attributes for this product"
                 />
+
 
                 {imageEnabledAttributes.length > 0 && (
                   <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -946,26 +910,7 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
                     })}
                   </div>
                 )}
-              {/* </FormFullWidth> */}
-
-              {/* <FormFullWidth> */}
-                <FormMultiDropdown
-                  label="Apply Offers"
-                  value={formik.values.productOffers}
-                  onChange={(values) => formik.setFieldValue("productOffers", values)}
-                  onBlur={() => formik.setFieldTouched("productOffers", true)}
-                  options={offers}
-                />
-              {/* </FormFullWidth> */}
-
-              {/* <FormFullWidth> */}
-                <FormMultiDropdown
-                  label="Frequently Bought Together"
-                  value={formik.values.frequentlyBoughtTogether}
-                  onChange={(values) => formik.setFieldValue("frequentlyBoughtTogether", values)}
-                  options={products}
-                />
-              {/* </FormFullWidth> */}
+              </FormFullWidth>
             </div>
           )}
 
@@ -1200,22 +1145,62 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
           {currentStep === 4 && (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <FormDropdown
-                label="Publish Status"
+                label="Pickup address"
                 required
-                value={formik.values.publishStatus}
-                onChange={(value) => formik.setFieldValue("publishStatus", value)}
-                onBlur={() => formik.setFieldTouched("publishStatus", true)}
-                error={getNestedError(formik.touched, formik.errors, "publishStatus")}
-                options={[
-                  { label: "Draft", value: "draft" },
-                  { label: "Published", value: "published" },
-                  { label: "Scheduled", value: "scheduled" },
-                ]}
+                value={formik.values.warehouseId}
+                onChange={(value) => formik.setFieldValue("warehouseId", value)}
+                onBlur={() => formik.setFieldTouched("warehouseId", true)}
+                error={
+                  getNestedError(formik.touched, formik.errors, "warehouseId") ||
+                  warehouseLoadError
+                }
+                options={warehouses}
+                placeholder={
+                  warehouseLoadError
+                    ? "Could not load pickup addresses"
+                    : warehouses.length
+                      ? "Select a pickup address"
+                      : "No active registered pickup addresses"
+                }
+                disabled={!warehouses.length}
               />
-              <FormToggle formik={formik} name="isActive" label="Active Status" />
-              <FormToggle formik={formik} name="isFeatured" label="Featured" />
-              <FormToggle formik={formik} name="newArrival" label="New Arrival" />
-              <FormToggle formik={formik} name="bestSeller" label="Best Seller" />
+              <FormMultiDropdown
+                label="Product Tags"
+                value={formik.values.productTags}
+                onChange={(values) => formik.setFieldValue("productTags", values)}
+                options={tags}
+                placeholder="Select or create tags"
+                creatable
+                createLabel="Add tag"
+                createPlaceholder="New tag name"
+                onCreate={handleCreateTag}
+                deletable
+                onDeleteOption={handleDeleteTag}
+              />
+              <FormFullWidth>
+                <FormMultiDropdown
+                  label="Apply Offers"
+                  value={formik.values.productOffers}
+                  onChange={(values) => formik.setFieldValue("productOffers", values)}
+                  onBlur={() => formik.setFieldTouched("productOffers", true)}
+                  options={offers}
+                />
+              </FormFullWidth>
+
+              <FormFullWidth>
+                <FormMultiDropdown
+                  label="Frequently Bought Together"
+                  value={formik.values.frequentlyBoughtTogether}
+                  onChange={(values) => formik.setFieldValue("frequentlyBoughtTogether", values)}
+                  options={products}
+                />
+              </FormFullWidth>
+              <div className="col-span-full grid grid-cols-1 gap-5 md:grid-cols-4">
+                <FormToggle formik={formik} name="isActive" label="Active Status" />
+                <FormToggle formik={formik} name="isFeatured" label="Featured" />
+                <FormToggle formik={formik} name="newArrival" label="New Arrival" />
+                <FormToggle formik={formik} name="bestSeller" label="Best Seller" />
+              </div>
             </div>
           )}
 

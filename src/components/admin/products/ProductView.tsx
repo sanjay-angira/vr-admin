@@ -26,7 +26,6 @@ type ProductRecord = {
   id: number;
   productName?: string;
   productSlug?: string;
-  publishStatus?: string;
   shortDescription?: string;
   description?: string;
   isActive?: boolean;
@@ -68,22 +67,6 @@ function StatusBadge({ active }: { active: boolean }) {
       }`}
     >
       {active ? "Active" : "Inactive"}
-    </span>
-  );
-}
-
-function PublishBadge({ status }: { status: string }) {
-  const normalized = status.toLowerCase();
-  const className =
-    normalized === "published"
-      ? "bg-emerald-50 text-emerald-700"
-      : normalized === "draft"
-        ? "bg-cyan-50 text-cyan-800"
-        : "bg-orange-50 text-orange-700";
-
-  return (
-    <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${className}`}>
-      {status}
     </span>
   );
 }
@@ -215,7 +198,6 @@ export function ProductView({ module, recordId }: AdminViewProps) {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <StatusBadge active={Boolean(product.isActive)} />
-            {product.publishStatus && <PublishBadge status={product.publishStatus} />}
             {storefrontSlug && (
               <Link
                 href={`/product/${storefrontSlug}`}
