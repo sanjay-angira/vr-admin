@@ -14,6 +14,7 @@ export type ImageOptimizationType =
   | "category_mobile"
   | "blog"
   | "banner"
+  | "banner_tablet"
   | "banner_mobile"
   | "offer_desktop"
   | "offer_tablet"

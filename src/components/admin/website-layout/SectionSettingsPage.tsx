@@ -13,7 +13,6 @@ import { Input } from "@/components/common/Input";
 import { generateSlug } from "@/components/admin/forms/shared/generateSlug";
 import { useSlugSync } from "@/components/admin/forms/shared/useSlugSync";
 import {
-  fetchBannersOptions,
   fetchBlogsOptions,
   fetchCategoriesOptions,
   fetchFaqsOptions,
@@ -43,7 +42,6 @@ type CmsSectionPayload = {
   blogIds?: number[];
   offerIds?: number[];
   faqIds?: number[];
-  bannerIds?: number[];
   reviewIds?: number[];
 };
 
@@ -108,7 +106,6 @@ type SectionFormValues = {
   blogIds: number[];
   offerIds: number[];
   faqIds: number[];
-  bannerIds: number[];
   reviewIds: number[];
   position: number;
 };
@@ -152,7 +149,6 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
   const [offers, setOffers] = useState<Array<{ label: string; value: string | number }>>([]);
   const [blogs, setBlogs] = useState<Array<{ label: string; value: string | number }>>([]);
   const [faqs, setFaqs] = useState<Array<{ label: string; value: string | number }>>([]);
-  const [banners, setBanners] = useState<Array<{ label: string; value: string | number }>>([]);
   const [reviews, setReviews] = useState<Array<{ label: string; value: string | number }>>([]);
 
   const [initialValues, setInitialValues] = useState<SectionFormValues>({
@@ -173,7 +169,6 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
     blogIds: [],
     offerIds: [],
     faqIds: [],
-    bannerIds: [],
     reviewIds: [],
     position: 1,
   });
@@ -185,15 +180,13 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
       fetchOffersOptions(),
       fetchBlogsOptions(),
       fetchFaqsOptions(),
-      fetchBannersOptions(),
       fetchReviewsOptions(),
-    ]).then(([p, c, o, b, f, bn, r]) => {
+    ]).then(([p, c, o, b, f, r]) => {
       setProducts(p);
       setCategories(c);
       setOffers(o);
       setBlogs(b);
       setFaqs(f);
-      setBanners(bn);
       setReviews(r);
     });
   }, []);
@@ -217,7 +210,6 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
           blogs?: Array<{ id: number }>;
           offers?: Array<{ id: number }>;
           faqs?: Array<{ id: number }>;
-          banners?: Array<{ id: number }>;
           reviews?: Array<{ id: number }>;
         }>(res);
         const data = (section.data ?? {}) as Record<string, unknown>;
@@ -240,7 +232,6 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
           blogIds: section.blogs?.map((item) => item.id) ?? [],
           offerIds: section.offers?.map((item) => item.id) ?? [],
           faqIds: section.faqs?.map((item) => item.id) ?? [],
-          bannerIds: section.banners?.map((item) => item.id) ?? [],
           reviewIds: section.reviews?.map((item) => item.id) ?? [],
           position: section.position ?? 1,
         });
@@ -280,7 +271,6 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
       blogIds: values.blogIds,
       offerIds: values.offerIds,
       faqIds: values.faqIds,
-      bannerIds: values.bannerIds,
       reviewIds: values.reviewIds,
     };
 
@@ -513,12 +503,6 @@ export function SectionSettingsPage({ sectionId }: SectionSettingsPageProps) {
                 value={values.faqIds}
                 onChange={(ids) => setFieldValue("faqIds", ids)}
                 options={faqs}
-              />
-              <FormMultiDropdown
-                label="Banners"
-                value={values.bannerIds}
-                onChange={(ids) => setFieldValue("bannerIds", ids)}
-                options={banners}
               />
               <FormMultiDropdown
                 label="Reviews"

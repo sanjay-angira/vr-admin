@@ -214,10 +214,6 @@ export async function fetchFaqsOptions() {
   return fetchListOptions("faqs", "question");
 }
 
-export async function fetchBannersOptions() {
-  return fetchListOptions("banners", "title");
-}
-
 export async function fetchReviewsOptions() {
   return fetchListOptions("reviews", "comment");
 }

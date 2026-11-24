@@ -38,9 +38,9 @@ type Values = {
   useAsHeroBanner: boolean;
   image: string;
   image3x2: string;
-  desktopBanner: string;
-  tabletBanner: string;
-  mobileBanner: string;
+  desktopImage: string;
+  tabletImage: string;
+  mobileImage: string;
   video: string;
   metaTitle: string;
   metaDescription: string;
@@ -90,9 +90,9 @@ const initialValues: Values = {
   useAsHeroBanner: false,
   image: "",
   image3x2: "",
-  desktopBanner: "",
-  tabletBanner: "",
-  mobileBanner: "",
+  desktopImage: "",
+  tabletImage: "",
+  mobileImage: "",
   video: "",
   metaTitle: "",
   metaDescription: "",
@@ -125,9 +125,9 @@ const schema = Yup.object({
   useAsHeroBanner: Yup.boolean(),
   image: Yup.string(),
   image3x2: Yup.string(),
-  desktopBanner: Yup.string(),
-  tabletBanner: Yup.string(),
-  mobileBanner: Yup.string(),
+  desktopImage: Yup.string(),
+  tabletImage: Yup.string(),
+  mobileImage: Yup.string(),
   video: optionalUrl,
   metaTitle: requiredString("Meta title", 3, META_TITLE_MAX),
   metaDescription: requiredString("Meta description", 3, META_DESC_MAX),
@@ -245,9 +245,9 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
         useAsHeroBanner: Boolean(r.useAsHeroBanner ?? false),
         image: String(r.image ?? ""),
         image3x2: String(r.image3x2 ?? ""),
-        desktopBanner: String(r.desktopBanner ?? r.bannerImage ?? ""),
-        tabletBanner: String(r.tabletBanner ?? ""),
-        mobileBanner: String(r.mobileBanner ?? r.mobileImage ?? ""),
+        desktopImage: String(r.desktopImage ?? r.desktopBanner ?? r.bannerImage ?? ""),
+        tabletImage: String(r.tabletImage ?? r.tabletBanner ?? ""),
+        mobileImage: String(r.mobileImage ?? r.mobileBanner ?? ""),
         video: String(r.video ?? ""),
         metaTitle: String(seo.metaTitle ?? r.metaTitle ?? ""),
         metaDescription: String(seo.metaDescription ?? r.metaDescription ?? ""),
@@ -282,9 +282,9 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
       useAsHeroBanner: v.useAsHeroBanner,
       image: v.image || null,
       image3x2: v.image3x2 || null,
-      desktopBanner: v.desktopBanner || null,
-      tabletBanner: v.tabletBanner || null,
-      mobileBanner: v.mobileBanner || null,
+      desktopImage: v.desktopImage || null,
+      tabletImage: v.tabletImage || null,
+      mobileImage: v.mobileImage || null,
       video: v.video || null,
       seo: {
         metaTitle: v.metaTitle,
@@ -412,7 +412,7 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <FormImageUpload
               formik={formik}
-              name="desktopBanner"
+              name="desktopImage"
               label="Desktop Category Banner (3:1, max 1920px)"
               uploadPath={UPLOAD_PATHS.categories.banner}
               imageType="category_banner"
@@ -420,7 +420,7 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
             />
             <FormImageUpload
               formik={formik}
-              name="tabletBanner"
+              name="tabletImage"
               label="Tablet Category Banner (2:1, max 1200px)"
               uploadPath={UPLOAD_PATHS.categories.banner}
               imageType="category_banner"
@@ -428,7 +428,7 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
             />
             <FormImageUpload
               formik={formik}
-              name="mobileBanner"
+              name="mobileImage"
               label="Mobile Category Banner (3:2, max 800px)"
               uploadPath={UPLOAD_PATHS.categories.mobile}
               imageType="category_mobile"

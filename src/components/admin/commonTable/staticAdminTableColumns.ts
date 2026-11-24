@@ -189,9 +189,8 @@ export const AttributeComponentColumns: AdminTableColumnDefinition[] = [
 
 export const BannerComponentColumns: AdminTableColumnDefinition[] = [
   { label: "ID", property: "id", type: "text", datatype: "id", visible: true, cssClasses: ["font-medium"] },
-  { label: "Title", property: "title", type: "text", datatype: "title", visible: true, cssClasses: ["font-medium"] },
-  { label: "Subtitle", property: "subtitle", type: "text", datatype: "text", visible: true, cssClasses: ["font-medium"] },
-  { label: "Desktop Image", property: "image", type: "text", datatype: "images", visible: true, cssClasses: ["font-medium"] },
+  { label: "Desktop Image", property: "desktopImage", type: "text", datatype: "images", visible: true, cssClasses: ["font-medium"] },
+  { label: "Tablet Image", property: "tabletImage", type: "text", datatype: "images", visible: true, cssClasses: ["font-medium"] },
   { label: "Mobile Image", property: "mobileImage", type: "text", datatype: "images", visible: true, cssClasses: ["font-medium"] },
   { label: "Position", property: "position", type: "text", datatype: "text", visible: true, cssClasses: ["font-medium"] },
   { label: "Status", property: "status", type: "text", datatype: "status", visible: true, cssClasses: ["font-medium"] },
