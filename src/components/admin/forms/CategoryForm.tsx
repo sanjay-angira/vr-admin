@@ -19,19 +19,16 @@ import {
 import { FormStepper } from "./shared/FormStepper";
 import { fetchCategoriesOptions, fetchOffersOptions } from "./shared/fetchOptions";
 import { useAdminCrudForm } from "./shared/useAdminCrudForm";
-import { useSlugSync } from "./shared/useSlugSync";
 import { UPLOAD_PATHS } from "./shared/uploadPaths";
 import {
   activeField,
   htmlMinLength,
   optionalUrl,
   requiredString,
-  slugField,
 } from "./shared/validation";
 
 type Values = {
   categoryName: string;
-  categorySlug: string;
   shortDescription: string;
   description: string;
   parentId: string;
@@ -39,9 +36,13 @@ type Values = {
   publishStatus: string;
   isActive: boolean;
   showOnHomePage: boolean;
+  useAsHeroBanner: boolean;
   image: string;
-  mobileImage: string;
-  bannerImage: string;
+  image3x2: string;
+  desktopBanner: string;
+  tabletBanner: string;
+  mobileBanner: string;
+  video: string;
   imageAltText: string;
   metaTitle: string;
   metaDescription: string;
@@ -55,6 +56,7 @@ type Values = {
   robotsIndex: boolean;
   robotsFollow: boolean;
   schemaType: string;
+  seoContent: string;
   metaRobots: string;
   twitterCard: string;
   twitterTitle: string;
@@ -66,6 +68,7 @@ const CATEGORY_FORM_STEPS = [
   { id: 1, label: "General Information" },
   { id: 2, label: "Media Assets" },
   { id: 3, label: "SEO Settings" },
+  { id: 4, label: "Category Settings" },
 ] as const;
 
 const SHORT_DESC_MAX = 500;
@@ -73,14 +76,13 @@ const META_TITLE_MAX = 70;
 const META_DESC_MAX = 320;
 
 const STEP_TOUCH_FIELDS: Record<number, Array<keyof Values>> = {
-  1: ["categoryName", "categorySlug", "shortDescription", "description", "publishStatus"],
+  1: ["categoryName", "shortDescription", "description", "publishStatus"],
   2: [],
   3: ["metaTitle", "metaDescription"],
 };
 
 const initialValues: Values = {
   categoryName: "",
-  categorySlug: "",
   shortDescription: "",
   description: "",
   parentId: "",
@@ -88,9 +90,13 @@ const initialValues: Values = {
   publishStatus: "draft",
   isActive: true,
   showOnHomePage: false,
+  useAsHeroBanner: false,
   image: "",
-  mobileImage: "",
-  bannerImage: "",
+  image3x2: "",
+  desktopBanner: "",
+  tabletBanner: "",
+  mobileBanner: "",
+  video: "",
   imageAltText: "",
   metaTitle: "",
   metaDescription: "",
@@ -104,6 +110,7 @@ const initialValues: Values = {
   robotsIndex: true,
   robotsFollow: true,
   schemaType: "CollectionPage",
+  seoContent: "",
   metaRobots: "",
   twitterCard: "",
   twitterTitle: "",
@@ -113,7 +120,6 @@ const initialValues: Values = {
 
 const schema = Yup.object({
   categoryName: requiredString("Category name", 3, 100),
-  categorySlug: slugField("Category slug"),
   shortDescription: requiredString("Short description", 3, SHORT_DESC_MAX),
   description: htmlMinLength("Description", 3),
   parentId: Yup.string(),
@@ -121,9 +127,13 @@ const schema = Yup.object({
   publishStatus: Yup.string().oneOf(["draft", "published"]).required(),
   isActive: activeField,
   showOnHomePage: Yup.boolean(),
+  useAsHeroBanner: Yup.boolean(),
   image: Yup.string(),
-  mobileImage: Yup.string(),
-  bannerImage: Yup.string(),
+  image3x2: Yup.string(),
+  desktopBanner: Yup.string(),
+  tabletBanner: Yup.string(),
+  mobileBanner: Yup.string(),
+  video: optionalUrl,
   imageAltText: Yup.string(),
   metaTitle: requiredString("Meta title", 3, META_TITLE_MAX),
   metaDescription: requiredString("Meta description", 3, META_DESC_MAX),
@@ -137,6 +147,7 @@ const schema = Yup.object({
   robotsIndex: Yup.boolean(),
   robotsFollow: Yup.boolean(),
   schemaType: Yup.string().max(50),
+  seoContent: Yup.string(),
   metaRobots: Yup.string(),
   twitterCard: Yup.string(),
   twitterTitle: Yup.string(),
@@ -150,16 +161,12 @@ function stripHtml(value: string) {
 
 function isCategoryStepValid(step: number, values: Values, errors: Record<string, unknown>) {
   if (step === 1) {
-    const slug = values.categorySlug.trim();
     return (
       values.categoryName.trim().length >= 3 &&
-      slug.length >= 3 &&
-      /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) &&
       values.shortDescription.trim().length >= 3 &&
       stripHtml(values.description).length >= 3 &&
       Boolean(values.publishStatus) &&
       !errors.categoryName &&
-      !errors.categorySlug &&
       !errors.shortDescription &&
       !errors.description &&
       !errors.publishStatus
@@ -234,7 +241,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
       const publishStatus = String(r.publishStatus ?? "draft");
       return {
         categoryName: String(r.categoryName ?? ""),
-        categorySlug: String(r.categorySlug ?? ""),
         shortDescription: String(r.shortDescription ?? ""),
         description: String(r.description ?? ""),
         parentId: String(r.parentId ?? (r.parent as { id?: number })?.id ?? ""),
@@ -246,9 +252,13 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
         publishStatus: publishStatus === "published" ? "published" : "draft",
         isActive: Boolean(r.isActive ?? true),
         showOnHomePage: Boolean(r.showOnHomePage ?? false),
+        useAsHeroBanner: Boolean(r.useAsHeroBanner ?? false),
         image: String(r.image ?? ""),
-        mobileImage: String(r.mobileImage ?? ""),
-        bannerImage: String(r.bannerImage ?? ""),
+        image3x2: String(r.image3x2 ?? ""),
+        desktopBanner: String(r.desktopBanner ?? r.bannerImage ?? ""),
+        tabletBanner: String(r.tabletBanner ?? ""),
+        mobileBanner: String(r.mobileBanner ?? r.mobileImage ?? ""),
+        video: String(r.video ?? ""),
         imageAltText: String(r.imageAltText ?? ""),
         metaTitle: String(seo.metaTitle ?? r.metaTitle ?? ""),
         metaDescription: String(seo.metaDescription ?? r.metaDescription ?? ""),
@@ -264,6 +274,7 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
         robotsIndex: Boolean(seo.robotsIndex ?? true),
         robotsFollow: Boolean(seo.robotsFollow ?? true),
         schemaType: String(seo.schemaType ?? "CollectionPage"),
+        seoContent: String(seo.seoContent ?? ""),
         metaRobots: String(seo.metaRobots ?? ""),
         twitterCard: String(seo.twitterCard ?? ""),
         twitterTitle: String(seo.twitterTitle ?? ""),
@@ -273,7 +284,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
     },
     mapValuesToPayload: (v) => ({
       categoryName: v.categoryName,
-      categorySlug: v.categorySlug,
       shortDescription: v.shortDescription,
       description: v.description,
       parentId: v.parentId ? Number(v.parentId) : null,
@@ -281,9 +291,13 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
       publishStatus: v.publishStatus,
       isActive: v.isActive,
       showOnHomePage: v.showOnHomePage,
+      useAsHeroBanner: v.useAsHeroBanner,
       image: v.image || null,
-      mobileImage: v.mobileImage || null,
-      bannerImage: v.bannerImage || null,
+      image3x2: v.image3x2 || null,
+      desktopBanner: v.desktopBanner || null,
+      tabletBanner: v.tabletBanner || null,
+      mobileBanner: v.mobileBanner || null,
+      video: v.video || null,
       imageAltText: v.imageAltText || null,
       seo: {
         metaTitle: v.metaTitle,
@@ -301,6 +315,7 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
         robotsIndex: v.robotsIndex,
         robotsFollow: v.robotsFollow,
         schemaType: v.schemaType || "CollectionPage",
+        seoContent: v.seoContent || null,
         metaRobots: v.metaRobots || null,
         twitterCard: v.twitterCard || null,
         twitterTitle: v.twitterTitle || null,
@@ -309,8 +324,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
       },
     }),
   });
-
-  useSlugSync(formik, "categoryName", "categorySlug", !isEdit);
 
   async function touchStepFields(step: number) {
     const fields = STEP_TOUCH_FIELDS[step] ?? [];
@@ -373,7 +386,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
         {currentStep === 1 && (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <FormInput formik={formik} name="categoryName" label="Category Name" required />
-            <FormInput formik={formik} name="categorySlug" label="Category Slug" required />
             <FormFullWidth>
               <FormInput
                 formik={formik}
@@ -419,22 +431,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
                 { label: "Published", value: "published" },
               ]}
             />
-            <FormFullWidth>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <StatusToggle
-                  label="Active Status"
-                  checked={formik.values.isActive}
-                  onChange={() => void formik.setFieldValue("isActive", !formik.values.isActive)}
-                />
-                <StatusToggle
-                  label="Show On Home Page"
-                  checked={formik.values.showOnHomePage}
-                  onChange={() =>
-                    void formik.setFieldValue("showOnHomePage", !formik.values.showOnHomePage)
-                  }
-                />
-              </div>
-            </FormFullWidth>
           </div>
         )}
 
@@ -443,29 +439,53 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
             <FormImageUpload
               formik={formik}
               name="image"
-              label="Upload Main Image"
+              label="Category Image (1:1)"
               uploadPath={UPLOAD_PATHS.categories.image}
               imageType="category"
+              previewMode="full"
             />
             <FormImageUpload
               formik={formik}
-              name="mobileImage"
-              label="Upload Mobile Image"
+              name="desktopBanner"
+              label="Desktop Category Banner"
+              uploadPath={UPLOAD_PATHS.categories.banner}
+              imageType="category_banner"
+              previewMode="full"
+            />
+            <FormImageUpload
+              formik={formik}
+              name="tabletBanner"
+              label="Tablet Category Banner"
+              uploadPath={UPLOAD_PATHS.categories.banner}
+              imageType="category_banner"
+              previewMode="full"
+            />
+            <FormImageUpload
+              formik={formik}
+              name="mobileBanner"
+              label="Mobile Category Banner"
               uploadPath={UPLOAD_PATHS.categories.mobile}
               imageType="category_mobile"
+              previewMode="full"
+            />
+            <FormImageUpload
+              formik={formik}
+              name="image3x2"
+              label="Category Image (3:2)"
+              uploadPath={UPLOAD_PATHS.categories.image}
+              imageType="category"
+              previewMode="full"
             />
             <FormFullWidth>
-              <FormImageUpload
-                formik={formik}
-                name="bannerImage"
-                label="Category Banner"
-                uploadPath={UPLOAD_PATHS.categories.banner}
-                imageType="category_banner"
-                hint="Wide image shown at the top of this category page."
-              />
+              <FormInput formik={formik} name="imageAltText" label="Image Alt Text" />
             </FormFullWidth>
             <FormFullWidth>
-              <FormInput formik={formik} name="imageAltText" label="Image Alt Text" />
+              <FormInput
+                formik={formik}
+                name="video"
+                label="Category Video URL"
+                type="url"
+              />
             </FormFullWidth>
           </div>
         )}
@@ -492,6 +512,14 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
                   rows={3}
                   maxLength={META_DESC_MAX}
                   hint={`${formik.values.metaDescription.length}/${META_DESC_MAX}`}
+                />
+              </FormFullWidth>
+              <FormFullWidth>
+                <FormTextarea
+                  formik={formik}
+                  name="seoContent"
+                  label="SEO Content"
+                  rows={6}
                 />
               </FormFullWidth>
               <FormInput
@@ -609,6 +637,30 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
                 </div>
               </FormFullWidth>
             </div>
+          </div>
+        )}
+
+        {currentStep === 4 && (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <StatusToggle
+              label="Active Status"
+              checked={formik.values.isActive}
+              onChange={() => void formik.setFieldValue("isActive", !formik.values.isActive)}
+            />
+            <StatusToggle
+              label="Show On Home Page"
+              checked={formik.values.showOnHomePage}
+              onChange={() =>
+                void formik.setFieldValue("showOnHomePage", !formik.values.showOnHomePage)
+              }
+            />
+            <StatusToggle
+              label="Use as Hero Banner"
+              checked={formik.values.useAsHeroBanner}
+              onChange={() =>
+                void formik.setFieldValue("useAsHeroBanner", !formik.values.useAsHeroBanner)
+              }
+            />
           </div>
         )}
 

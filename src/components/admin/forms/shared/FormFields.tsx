@@ -195,12 +195,14 @@ export function FormImageUpload<T extends Record<string, unknown>>({
   hint,
   className,
   mediaType = "image",
+  previewMode,
   imageType,
   entityId,
   sizesField,
 }: BaseFieldProps<T> & {
   uploadPath: string;
   mediaType?: "image" | "video";
+  previewMode?: "thumbnail" | "full";
   imageType?: import("@/utils/optimizedImage").ImageOptimizationType;
   entityId?: string | number;
   /** Optional formik field name for flat optimized image columns alongside the URL. */
@@ -224,6 +226,7 @@ export function FormImageUpload<T extends Record<string, unknown>>({
       hint={hint}
       className={className}
       mediaType={mediaType}
+      previewMode={previewMode}
       imageType={imageType}
       entityId={entityId}
     />

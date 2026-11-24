@@ -34,14 +34,14 @@ export const adminMenuSections: AdminMenuSection[] = [
         icon: "layout-grid",
       },
       {
-        label: "Brands",
-        href: "/brands",
-        icon: "award",
-      },
-      {
         label: "Attributes",
         href: "/attributes",
         icon: "sliders-horizontal",
+      },
+      {
+        label: "Warehouses",
+        href: "/warehouses",
+        icon: "warehouse",
       },
     ],
   },

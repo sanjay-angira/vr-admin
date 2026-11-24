@@ -25,7 +25,6 @@ export const ProductComponentColumns: AdminTableColumnDefinition[] = [
   { label: "ID", property: "id", type: "text", datatype: "id", visible: true, cssClasses: ["font-medium"] },
   { label: "Product Name", property: "productName", type: "text", datatype: "productName", visible: true, cssClasses: ["font-medium"] },
   { label: "Category", property: "categoryName", type: "text", datatype: "categoryName", visible: true, cssClasses: ["font-medium"] },
-  { label: "Brand", property: "brandName", type: "text", datatype: "brandName", visible: true, cssClasses: ["font-medium"] },
   { label: "Status", property: "isActive", type: "text", datatype: "status", visible: true, cssClasses: ["font-medium"] },
   { label: "Created On", property: "createdAt", type: "text", datatype: "date", visible: true, cssClasses: ["font-medium"] },
   { label: "Updated On", property: "updatedAt", type: "text", datatype: "date", visible: true, cssClasses: ["font-medium"] },

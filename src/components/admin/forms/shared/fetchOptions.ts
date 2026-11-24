@@ -22,9 +22,10 @@ function isWarehouseActive(value: unknown): boolean {
 }
 
 export async function fetchRegisteredWarehousesOptions(
-  brandId: string | number
 ): Promise<WarehouseOption[]> {
-  const response = await getData(API_ENDPOINTS.WAREHOUSES.LIST_BY_BRAND(brandId));
+  const response = await getData(API_ENDPOINTS.WAREHOUSES.LIST, {
+    registeredOnly: true,
+  });
   const rows = response?.data;
   if (!Array.isArray(rows)) {
     throw new Error("Could not load pickup addresses for this brand");

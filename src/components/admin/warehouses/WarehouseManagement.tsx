@@ -10,7 +10,6 @@ type WarehouseStatus =
 
 type Warehouse = {
   id: number;
-  brandId: number;
   name: string;
   contactName: string;
   email: string;
@@ -39,7 +38,6 @@ type Warehouse = {
 type WarehouseFields = Omit<
   Warehouse,
   | "id"
-  | "brandId"
   | "delhiveryWarehouseName"
   | "delhiveryWarehouseId"
   | "registrationStatus"
@@ -207,7 +205,7 @@ function getResult<T>(response: {
   return response.data;
 }
 
-export function WarehouseManagement({ brandId }: { brandId: number }) {
+export function WarehouseManagement() {
   const router = useRouter();
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [fields, setFields] = useState<WarehouseFields>(emptyFields);
@@ -221,7 +219,7 @@ export function WarehouseManagement({ brandId }: { brandId: number }) {
   const loadWarehouses = useCallback(async () => {
     try {
       const response = await getData(
-        API_ENDPOINTS.WAREHOUSES.LIST_BY_BRAND(brandId),
+        API_ENDPOINTS.WAREHOUSES.LIST,
       );
       setWarehouses(getResult<Warehouse[]>(response) ?? []);
       setError("");
@@ -230,7 +228,7 @@ export function WarehouseManagement({ brandId }: { brandId: number }) {
     } finally {
       setLoading(false);
     }
-  }, [brandId]);
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => void loadWarehouses(), 0);
@@ -274,7 +272,7 @@ export function WarehouseManagement({ brandId }: { brandId: number }) {
         );
       } else {
         const response = await postData(
-          API_ENDPOINTS.WAREHOUSES.CREATE_FOR_BRAND(brandId),
+          API_ENDPOINTS.WAREHOUSES.CREATE,
           fields,
         );
         const saved = getResult<Warehouse>(response);
@@ -330,16 +328,16 @@ export function WarehouseManagement({ brandId }: { brandId: number }) {
       <header className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
         <button
           type="button"
-          onClick={() => router.push(`/brands/edit/${brandId}`)}
+          onClick={() => router.push("/warehouses")}
           className="mb-2 text-sm font-medium text-zinc-500 hover:text-zinc-800"
         >
-          ← Back to brand
+          ← Back to warehouses
         </button>
         <h1 className="text-2xl font-semibold text-zinc-900">
           Warehouse Management
         </h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Create and manage brand dispatch locations. Registered Delhivery
+          Create and manage pickup and dispatch locations. Registered Delhivery
           address fields are locked because no verified provider update endpoint
           is available.
         </p>
@@ -457,7 +455,7 @@ export function WarehouseManagement({ brandId }: { brandId: number }) {
 
         <section className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold text-zinc-900">
-            Brand warehouses
+            Warehouses
           </h2>
           {loading ? (
             <p className="text-sm text-zinc-500">Loading warehouses...</p>

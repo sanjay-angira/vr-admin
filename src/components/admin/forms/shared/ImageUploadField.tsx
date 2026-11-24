@@ -318,6 +318,7 @@ type BaseUploadFieldProps = {
   hint?: string;
   className?: string;
   mediaType?: "image" | "video";
+  previewMode?: "thumbnail" | "full";
   /** Matches admin Input / dropdown height (42px) for inline form grids */
   variant?: "default" | "compact";
   /** Enables Sharp optimization pipeline on upload. */
@@ -346,6 +347,7 @@ export function ImageUploadField({
   hint,
   className,
   mediaType = "image",
+  previewMode = "thumbnail",
   variant = "default",
   imageType,
   entityId,
@@ -424,7 +426,9 @@ export function ImageUploadField({
 
   return (
     <div className={className}>
-      <FormLabel label={label} required={required} htmlFor={inputId} />
+      {previewMode !== "full" && (
+        <FormLabel label={label} required={required} htmlFor={inputId} />
+      )}
 
       {variant === "compact" ? (
         value ? (
@@ -488,6 +492,59 @@ export function ImageUploadField({
             <span className="truncate">Upload image</span>
           </button>
         )
+      ) : previewMode === "full" ? (
+        <div className="space-y-2">
+          {value && (
+            <div className="relative w-fit max-w-full">
+              {mediaType === "video" ? (
+                <video
+                  src={value}
+                  controls
+                  className="max-h-80 max-w-full rounded-xl border border-zinc-200 bg-black"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setFullViewOpen(true)}
+                  className="block max-w-full"
+                  aria-label={`View ${label} full size`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={value}
+                    alt={label}
+                    className="max-h-80 max-w-full cursor-zoom-in rounded-xl border border-zinc-200 object-contain"
+                  />
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-zinc-600 shadow-md transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-60"
+                aria-label={`Remove ${label}`}
+              >
+                {deleting ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <X className="h-3.5 w-3.5" />
+                )}
+              </button>
+            </div>
+          )}
+          <FormLabel label={label} required={required} htmlFor={inputId} />
+          <button
+            id={inputId}
+            type="button"
+            onClick={openModal}
+            className={UPLOAD_TRIGGER_CLASS}
+          >
+            <CloudUpload className="h-4 w-4" />
+            {value
+              ? `Replace ${mediaType === "video" ? "video" : "image"}`
+              : `Upload ${mediaType === "video" ? "video" : "image"}`}
+          </button>
+        </div>
       ) : value ? (
         <div className="rounded-xl border border-zinc-200 bg-zinc-50/50 p-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">

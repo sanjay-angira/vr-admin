@@ -70,10 +70,8 @@ export const API_ENDPOINTS = {
   },
 
   WAREHOUSES: {
-    LIST_BY_BRAND: (brandId: number | string) =>
-      `admin/brands/${brandId}/warehouses`,
-    CREATE_FOR_BRAND: (brandId: number | string) =>
-      `admin/brands/${brandId}/warehouses`,
+    LIST: "admin/warehouses",
+    CREATE: "admin/warehouses",
     DETAILS: (id: number | string) => `admin/warehouses/${id}`,
     UPDATE: (id: number | string) => `admin/warehouses/${id}`,
     SET_DEFAULT: (id: number | string) => `admin/warehouses/${id}/default`,

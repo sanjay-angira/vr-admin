@@ -9,7 +9,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import { useEffect, useRef, useState, useCallback, type FormEvent, type MouseEvent } from "react";
+import { useEffect, useState, useCallback, type FormEvent, type MouseEvent } from "react";
 import * as Yup from "yup";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
@@ -29,7 +29,6 @@ import { MultiImageUploadField, ImageUploadField } from "./shared/ImageUploadFie
 import { UPLOAD_PATHS } from "./shared/uploadPaths";
 import {
   fetchAttributesOptions,
-  fetchBrandsOptions,
   fetchChildCategoriesOptions,
   fetchOffersOptions,
   fetchProductsOptions,
@@ -42,9 +41,7 @@ import {
   type WarehouseOption,
 } from "./shared/fetchOptions";
 import { useAdminCrudForm } from "./shared/useAdminCrudForm";
-import { useSlugSync } from "./shared/useSlugSync";
-import { generateSlug } from "./shared/generateSlug";
-import { activeField, htmlMinLength, requiredString, slugField } from "./shared/validation";
+import { activeField, htmlMinLength, requiredString } from "./shared/validation";
 import {
   ATTRIBUTE_CUSTOMER_DISPLAY_OPTIONS,
   attributeSupportsImage,
@@ -68,7 +65,6 @@ import {
   syncAttributeCustomerDisplay,
   syncVariantAttributes,
   STEP_TOUCH_FIELDS,
-  VARIANT_SLUG_PATTERN,
   type AttributeMeta,
   type AttributeViewOption,
   type ProductFormValues,
@@ -78,7 +74,6 @@ import { FormQuillEditor } from "./shared/FormQuillEditor";
 
 const variantSchema = Yup.object({
   name: requiredString("Variant name", 1),
-  slug: Yup.string(),
   description: Yup.string(),
   sku: Yup.string().trim().required("SKU is required"),
   price: Yup.number().min(0.01, "Selling price must be at least 0.01").required("Selling price is required"),
@@ -95,7 +90,6 @@ const variantSchema = Yup.object({
   packageWeightGrams: Yup.number()
     .moreThan(0, "Weight must be greater than zero")
     .required("Package weight is required"),
-  productVariantOffers: Yup.array().of(Yup.number()),
   images: Yup.array().of(Yup.string()),
   variantAttributes: Yup.array().of(
     Yup.object({
@@ -110,11 +104,9 @@ const variantSchema = Yup.object({
 
 const schema = Yup.object({
   productName: requiredString("Product name", 2),
-  productSlug: slugField("Product slug"),
   shortDescription: requiredString("Short description", 2),
   description: htmlMinLength("Description", 2),
   publishStatus: Yup.string().oneOf(["draft", "published", "scheduled"]).required(),
-  brandId: Yup.string().required("Brand is required"),
   warehouseId: Yup.string().required("Pickup address is required"),
   category: Yup.string(),
   childCategories: Yup.array().of(Yup.string()),
@@ -126,19 +118,7 @@ const schema = Yup.object({
   attributeCustomerDisplay: Yup.object(),
   variants: Yup.array()
     .of(variantSchema)
-    .min(1, "At least one variant is required")
-    .test(
-      "variant-slugs",
-      "Each variant needs a valid slug",
-      function (variants) {
-        if (!Array.isArray(variants)) return false;
-        return variants.every(
-          (variant) =>
-            typeof variant?.slug === "string" &&
-            VARIANT_SLUG_PATTERN.test(variant.slug.trim())
-        );
-      }
-    ),
+    .min(1, "At least one variant is required"),
   seo: Yup.object({
     metaTitle: requiredString("Meta title", 2),
     metaDescription: requiredString("Meta description", 2),
@@ -214,30 +194,9 @@ function VariantPanel({
   attributeCustomerDisplay: Record<number, AttributeViewOption>;
 }) {
   const prefix = `variants.${index}`;
-  const slugManuallyEdited = useRef(Boolean(variant.id && variant.slug));
-
-  useEffect(() => {
-    if (slugManuallyEdited.current) return;
-
-    const nextSlug = variant.name.trim() ? generateSlug(variant.name) : "";
-
-    if (variant.slug !== nextSlug) {
-      void formik.setFieldValue(`${prefix}.slug`, nextSlug, false);
-    }
-  }, [formik, prefix, variant.name, variant.slug]);
 
   function handleVariantNameChange(value: string) {
     void formik.setFieldValue(`${prefix}.name`, value, false);
-
-    if (!slugManuallyEdited.current) {
-      const nextSlug = value.trim() ? generateSlug(value) : "";
-      void formik.setFieldValue(`${prefix}.slug`, nextSlug, false);
-    }
-  }
-
-  function handleVariantSlugChange(value: string) {
-    slugManuallyEdited.current = true;
-    void formik.setFieldValue(`${prefix}.slug`, value, false);
   }
 
   return (
@@ -274,15 +233,6 @@ function VariantPanel({
                 error={getNestedError(formik.touched, formik.errors, `${prefix}.name`)}
               />
               <Input
-                label="Variant Slug"
-                required
-                name={`${prefix}.slug`}
-                value={variant.slug}
-                onChange={(event) => handleVariantSlugChange(event.target.value)}
-                onBlur={formik.handleBlur}
-                error={getNestedError(formik.touched, formik.errors, `${prefix}.slug`)}
-              />
-              <Input
                 label="SKU"
                 required
                 name={`${prefix}.sku`}
@@ -303,6 +253,17 @@ function VariantPanel({
                 onBlur={formik.handleBlur}
                 error={getNestedError(formik.touched, formik.errors, `${prefix}.price`)}
               // hint="What the customer pays. Offers only raise the crossed MRP (e.g. ₹1000 + 50% off → MRP ₹2000)."
+              />
+               <Input
+                label="Stock"
+                required
+                name={`${prefix}.stock`}
+                type="number"
+                min="0"
+                value={variant.stock}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={getNestedError(formik.touched, formik.errors, `${prefix}.stock`)}
               />
             </div>
             <div className="col-span-full grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -372,29 +333,7 @@ function VariantPanel({
               />
             </div>
 
-            <div>
-              <Input
-                label="Stock"
-                required
-                name={`${prefix}.stock`}
-                type="number"
-                min="0"
-                value={variant.stock}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={getNestedError(formik.touched, formik.errors, `${prefix}.stock`)}
-              />
-            </div>
-
-            <div>
-              <FormMultiDropdown
-                label="Variant Offers"
-                value={variant.productVariantOffers}
-                onChange={(values) => formik.setFieldValue(`${prefix}.productVariantOffers`, values)}
-                options={offers}
-              />
-            </div>
-
+           
             <div className="col-span-full">
               <FormQuillEditor
                 label="Variant Description"
@@ -542,11 +481,9 @@ function VariantPanel({
 export function ProductForm({ module, recordId }: AdminFormProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedVariant, setExpandedVariant] = useState<number | null>(0);
-
-  const [brands, setBrands] = useState<Array<{ label: string; value: string | number }>>([]);
   const [warehouses, setWarehouses] = useState<WarehouseOption[]>([]);
-  const [warehousesLoading, setWarehousesLoading] = useState(false);
   const [warehouseLoadError, setWarehouseLoadError] = useState("");
+
   const [rootCategories, setRootCategories] = useState<
     Array<{ label: string; value: string | number }>
   >([]);
@@ -575,12 +512,20 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
   }, []);
 
   useEffect(() => {
-    fetchBrandsOptions().then(setBrands);
     fetchRootCategoriesOptions().then(setRootCategories);
     fetchOffersOptions().then(setOffers);
     fetchProductTagsOptions().then(setTags);
     fetchProductsOptions().then(setProducts);
     fetchAttributesOptions().then(setAttributes);
+    fetchRegisteredWarehousesOptions()
+      .then(setWarehouses)
+      .catch((error: unknown) =>
+        setWarehouseLoadError(
+          error instanceof Error
+            ? error.message
+            : "Could not load pickup addresses"
+        )
+      );
   }, []);
 
   const { formik, loading, loadError, isEdit } = useAdminCrudForm<ProductFormValues>({
@@ -639,17 +584,16 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
 
       return {
         productName: String(record.productName ?? ""),
-        productSlug: String(record.productSlug ?? ""),
         shortDescription: String(record.shortDescription ?? ""),
         description: String(record.description ?? ""),
         publishStatus: String(record.publishStatus ?? "draft"),
-        brandId: String(record.brandId ?? (record.brand as { id?: number })?.id ?? ""),
-        warehouseId: String(
-          record.warehouseId ?? (record.warehouse as { id?: number })?.id ?? ""
-        ),
+        warehouseId: String(record.warehouseId ?? (record.warehouse as { id?: number })?.id ?? ""),
         category: String((record.category as { id?: number })?.id ?? record.category ?? ""),
         childCategories: [],
         isActive: Boolean(record.isActive ?? true),
+        isFeatured: Boolean(record.isFeatured ?? false),
+        newArrival: Boolean(record.newArrival ?? false),
+        bestSeller: Boolean(record.bestSeller ?? false),
         productOffers: normalizeIds(record.productOffers),
         productTags: normalizeIds(record.productTags ?? record.tags),
         frequentlyBoughtTogether: normalizeIds(record.frequentlyBoughtTogether),
@@ -685,51 +629,7 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
     mapValuesToPayload: (values) =>
       buildProductPayload(values, buildAttributeMetaById(attributes)),
   });
-  const selectedWarehouseId = useRef(formik.values.warehouseId);
-  const setFieldValue = formik.setFieldValue;
 
-  useEffect(() => {
-    selectedWarehouseId.current = formik.values.warehouseId;
-  }, [formik.values.warehouseId]);
-
-  useEffect(() => {
-    let active = true;
-    const brandId = formik.values.brandId;
-
-    void Promise.resolve().then(async () => {
-      if (!brandId) return;
-      if (active) setWarehousesLoading(true);
-      try {
-        const options = await fetchRegisteredWarehousesOptions(brandId);
-        if (!active) return;
-        setWarehouses(options);
-        if (
-          selectedWarehouseId.current &&
-          !options.some(
-            (option) =>
-              String(option.value) === String(selectedWarehouseId.current)
-          )
-        ) {
-          void setFieldValue("warehouseId", "", false);
-        }
-      } catch (error: unknown) {
-        if (!active) return;
-        const message =
-          error && typeof error === "object" && "message" in error
-            ? String(error.message)
-            : "Could not load pickup addresses for this brand";
-        setWarehouseLoadError(message);
-      } finally {
-        if (active) setWarehousesLoading(false);
-      }
-    });
-
-    return () => {
-      active = false;
-    };
-  }, [formik.values.brandId, setFieldValue]);
-
-  useSlugSync(formik, "productName", "productSlug", !isEdit);
 
   async function loadChildLevelsFromParent(parentId: string, resetFromLevel = 0) {
     if (!parentId) {
@@ -792,7 +692,6 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
 
       formik.values.variants.forEach((variant, index) => {
         formik.setFieldTouched(`variants.${index}.name`, true, false);
-        formik.setFieldTouched(`variants.${index}.slug`, true, false);
         formik.setFieldTouched(`variants.${index}.price`, true, false);
         formik.setFieldTouched(`variants.${index}.stock`, true, false);
         variant.variantAttributes.forEach((item, attributeIndex) => {
@@ -898,25 +797,6 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
           {currentStep === 1 && (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <FormInput formik={formik} name="productName" label="Product Name" required />
-              <FormInput formik={formik} name="productSlug" label="Product Slug" required />
-
-              <FormDropdown
-                label="Brand"
-                required
-                value={formik.values.brandId}
-                onChange={(value) => {
-                  void formik.setFieldValue("brandId", value);
-                  void formik.setFieldValue("warehouseId", "");
-                  setWarehouses([]);
-                  setWarehouseLoadError("");
-                  setWarehousesLoading(Boolean(value));
-                }}
-                onBlur={() => formik.setFieldTouched("brandId", true)}
-                error={getNestedError(formik.touched, formik.errors, "brandId")}
-                options={brands}
-                placeholder="Select a brand"
-              />
-
               <FormDropdown
                 label="Pickup address"
                 required
@@ -929,16 +809,13 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
                 }
                 options={warehouses}
                 placeholder={
-                  !formik.values.brandId
-                    ? "Select a brand first"
-                    : warehousesLoading
-                      ? "Loading pickup addresses..."
-                      : warehouses.length
-                        ? "Select a pickup address"
-                        : "No active registered pickup addresses"
+                  warehouseLoadError
+                    ? "Could not load pickup addresses"
+                    : warehouses.length
+                      ? "Select a pickup address"
+                      : "No active registered pickup addresses"
                 }
-                disabled={!formik.values.brandId || warehousesLoading || !warehouses.length}
-                // hint="Only active, Delhivery-registered warehouses are available."
+                disabled={!warehouses.length}
               />
 
               <FormDropdown
@@ -1336,6 +1213,9 @@ export function ProductForm({ module, recordId }: AdminFormProps) {
                 ]}
               />
               <FormToggle formik={formik} name="isActive" label="Active Status" />
+              <FormToggle formik={formik} name="isFeatured" label="Featured" />
+              <FormToggle formik={formik} name="newArrival" label="New Arrival" />
+              <FormToggle formik={formik} name="bestSeller" label="Best Seller" />
             </div>
           )}
 

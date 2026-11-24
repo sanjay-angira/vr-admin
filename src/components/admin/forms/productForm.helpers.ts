@@ -254,15 +254,16 @@ export type ProductSeoValues = {
 
 export type ProductFormValues = {
   productName: string;
-  productSlug: string;
   shortDescription: string;
   description: string;
   publishStatus: string;
-  brandId: string;
   warehouseId: string;
   category: string;
   childCategories: string[];
   isActive: boolean;
+  isFeatured: boolean;
+  newArrival: boolean;
+  bestSeller: boolean;
   productOffers: number[];
   productTags: number[];
   frequentlyBoughtTogether: number[];
@@ -297,15 +298,16 @@ export const emptyVariant = (): ProductVariant => ({
 
 export const productFormInitialValues: ProductFormValues = {
   productName: "",
-  productSlug: "",
   shortDescription: "",
   description: "",
   publishStatus: "draft",
-  brandId: "",
   warehouseId: "",
   category: "",
   childCategories: [],
   isActive: true,
+  isFeatured: false,
+  newArrival: false,
+  bestSeller: false,
   productOffers: [],
   productTags: [],
   frequentlyBoughtTogether: [],
@@ -499,12 +501,13 @@ export function buildProductPayload(
 
   return {
     productName: values.productName,
-    productSlug: values.productSlug,
     shortDescription: values.shortDescription,
     description: values.description,
     publishStatus: values.publishStatus,
     isActive: values.isActive,
-    brandId: Number(values.brandId),
+    isFeatured: values.isFeatured,
+    newArrival: values.newArrival,
+    bestSeller: values.bestSeller,
     warehouseId: Number(values.warehouseId),
     category: getDeepestCategoryId(values),
     productOffers,
@@ -516,7 +519,6 @@ export function buildProductPayload(
       const variantPayload: Record<string, unknown> = {
         ...(variant.id ? { id: variant.id } : {}),
         name: variantName,
-        slug: variant.slug.trim() || generateSlug(variantName),
         description: variant.description || undefined,
         price: Number(variant.price),
         stock: Number(variant.stock),
@@ -532,7 +534,6 @@ export function buildProductPayload(
       // Always send images/offers/attributes so clearing them on edit reaches the API.
       // Omitting empty arrays left old ManyToMany / child rows attached.
       variantPayload.images = variantImages;
-      variantPayload.productVariantOffers = normalizeNumberArray(variant.productVariantOffers);
       const variantAttributes = variant.variantAttributes
         .filter((item) => item.value.trim())
         .map((item) => {
@@ -627,18 +628,14 @@ export function isProductStepValid(
       );
       return (
         Boolean(values.productName?.trim()) &&
-        Boolean(values.productSlug?.trim()) &&
         Boolean(values.shortDescription?.trim()) &&
         Boolean(descriptionText) &&
-        Boolean(values.brandId) &&
         Boolean(values.warehouseId) &&
         categorySelected &&
         displayValid &&
         !hasFieldError(errors, "productName") &&
-        !hasFieldError(errors, "productSlug") &&
         !hasFieldError(errors, "shortDescription") &&
         !hasFieldError(errors, "description") &&
-        !hasFieldError(errors, "brandId") &&
         !hasFieldError(errors, "warehouseId") &&
         !hasFieldError(errors, "category")
       );
@@ -648,19 +645,13 @@ export function isProductStepValid(
       return (
         values.variants.every((variant, index) => {
           const hasValidName = Boolean(variant.name?.trim());
-          const slugValid =
-            Boolean(variant.slug?.trim()) &&
-            VARIANT_SLUG_PATTERN.test(variant.slug.trim()) &&
-            !hasFieldError(errors, `variants.${index}.slug`);
           return (
             hasValidName &&
-            slugValid &&
             variant.price !== "" &&
             Number(variant.price) >= 0.01 &&
             variant.stock !== "" &&
             Number(variant.stock) >= 0 &&
             !hasFieldError(errors, `variants.${index}.name`) &&
-            !hasFieldError(errors, `variants.${index}.slug`) &&
             !hasFieldError(errors, `variants.${index}.price`) &&
             !hasFieldError(errors, `variants.${index}.stock`)
           );
@@ -685,7 +676,7 @@ export function isProductStepValid(
 }
 
 export const STEP_TOUCH_FIELDS: Record<number, string[]> = {
-  1: ["productName", "productSlug", "shortDescription", "description", "brandId", "warehouseId", "category", "childCategories", "attributeIds", "attributeCustomerDisplay"],
+  1: ["productName", "shortDescription", "description", "warehouseId", "category", "childCategories", "attributeIds", "attributeCustomerDisplay"],
   2: ["variants"],
   3: ["seo.metaTitle", "seo.metaDescription", "seo.metaKeywords", "seo.canonicalUrl", "seo.ogImage"],
   4: ["publishStatus", "isActive"],
