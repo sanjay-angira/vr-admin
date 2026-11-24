@@ -7,6 +7,7 @@ import { Button } from "@/components/common/Button";
 import { FormDropdown } from "./FormDropdown";
 import { FormMultiDropdown } from "./FormMultiDropdown";
 import { FormQuillEditor } from "./FormQuillEditor";
+import { FormDatePicker } from "./FormDatePicker";
 import { ImageUploadField, MultiImageUploadField } from "./ImageUploadField";
 import { FormLabel } from "./FormLabel";
 
@@ -54,6 +55,8 @@ export function FormInput<T extends Record<string, unknown>>({
     />
   );
 }
+
+export { FormDatePicker };
 
 export function FormTextarea<T extends Record<string, unknown>>({
   formik,

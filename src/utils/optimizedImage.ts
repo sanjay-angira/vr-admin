@@ -14,7 +14,10 @@ export type ImageOptimizationType =
   | "category_mobile"
   | "blog"
   | "banner"
-  | "banner_mobile";
+  | "banner_mobile"
+  | "offer_desktop"
+  | "offer_tablet"
+  | "offer_mobile";
 
 export type OptimizedImageSource = OptimizedImageColumns & {
   url?: string | null;
