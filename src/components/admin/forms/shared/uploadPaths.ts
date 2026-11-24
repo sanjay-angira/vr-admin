@@ -4,6 +4,7 @@ export const UPLOAD_PATHS = {
   variantImages: "/products/variant-images",
   categories: {
     image: "/product-category/images",
+    video: "/product-category/videos",
     mobile: "/product-category/mobile",
     banner: "/product-category/banner",
   },

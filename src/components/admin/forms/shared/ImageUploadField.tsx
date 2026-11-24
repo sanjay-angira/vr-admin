@@ -495,25 +495,25 @@ export function ImageUploadField({
       ) : previewMode === "full" ? (
         <div className="space-y-2">
           {value && (
-            <div className="relative w-fit max-w-full">
+            <div className="relative h-48 w-full overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50">
               {mediaType === "video" ? (
                 <video
                   src={value}
                   controls
-                  className="max-h-80 max-w-full rounded-xl border border-zinc-200 bg-black"
+                  className="h-full w-full bg-black object-contain"
                 />
               ) : (
                 <button
                   type="button"
                   onClick={() => setFullViewOpen(true)}
-                  className="block max-w-full"
+                  className="block h-full w-full"
                   aria-label={`View ${label} full size`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={value}
                     alt={label}
-                    className="max-h-80 max-w-full cursor-zoom-in rounded-xl border border-zinc-200 object-contain"
+                    className="h-full w-full cursor-zoom-in object-contain"
                   />
                 </button>
               )}

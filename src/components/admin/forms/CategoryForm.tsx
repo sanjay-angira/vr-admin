@@ -43,7 +43,6 @@ type Values = {
   tabletBanner: string;
   mobileBanner: string;
   video: string;
-  imageAltText: string;
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string;
@@ -97,7 +96,6 @@ const initialValues: Values = {
   tabletBanner: "",
   mobileBanner: "",
   video: "",
-  imageAltText: "",
   metaTitle: "",
   metaDescription: "",
   metaKeywords: "",
@@ -134,7 +132,6 @@ const schema = Yup.object({
   tabletBanner: Yup.string(),
   mobileBanner: Yup.string(),
   video: optionalUrl,
-  imageAltText: Yup.string(),
   metaTitle: requiredString("Meta title", 3, META_TITLE_MAX),
   metaDescription: requiredString("Meta description", 3, META_DESC_MAX),
   metaKeywords: Yup.string(),
@@ -259,7 +256,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
         tabletBanner: String(r.tabletBanner ?? ""),
         mobileBanner: String(r.mobileBanner ?? r.mobileImage ?? ""),
         video: String(r.video ?? ""),
-        imageAltText: String(r.imageAltText ?? ""),
         metaTitle: String(seo.metaTitle ?? r.metaTitle ?? ""),
         metaDescription: String(seo.metaDescription ?? r.metaDescription ?? ""),
         metaKeywords: String(seo.metaKeywords ?? r.metaKeywords ?? ""),
@@ -298,7 +294,6 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
       tabletBanner: v.tabletBanner || null,
       mobileBanner: v.mobileBanner || null,
       video: v.video || null,
-      imageAltText: v.imageAltText || null,
       seo: {
         metaTitle: v.metaTitle,
         metaDescription: v.metaDescription,
@@ -438,16 +433,8 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <FormImageUpload
               formik={formik}
-              name="image"
-              label="Category Image (1:1)"
-              uploadPath={UPLOAD_PATHS.categories.image}
-              imageType="category"
-              previewMode="full"
-            />
-            <FormImageUpload
-              formik={formik}
               name="desktopBanner"
-              label="Desktop Category Banner"
+              label="Desktop Category Banner (3:1, max 1920px)"
               uploadPath={UPLOAD_PATHS.categories.banner}
               imageType="category_banner"
               previewMode="full"
@@ -455,7 +442,7 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
             <FormImageUpload
               formik={formik}
               name="tabletBanner"
-              label="Tablet Category Banner"
+              label="Tablet Category Banner (2:1, max 1200px)"
               uploadPath={UPLOAD_PATHS.categories.banner}
               imageType="category_banner"
               previewMode="full"
@@ -463,9 +450,17 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
             <FormImageUpload
               formik={formik}
               name="mobileBanner"
-              label="Mobile Category Banner"
+              label="Mobile Category Banner (3:2, max 800px)"
               uploadPath={UPLOAD_PATHS.categories.mobile}
               imageType="category_mobile"
+              previewMode="full"
+            />
+            <FormImageUpload
+              formik={formik}
+              name="image"
+              label="Category Image (1:1)"
+              uploadPath={UPLOAD_PATHS.categories.image}
+              imageType="category"
               previewMode="full"
             />
             <FormImageUpload
@@ -477,14 +472,13 @@ export function CategoryForm({ module, recordId }: AdminFormProps) {
               previewMode="full"
             />
             <FormFullWidth>
-              <FormInput formik={formik} name="imageAltText" label="Image Alt Text" />
-            </FormFullWidth>
-            <FormFullWidth>
-              <FormInput
+              <FormImageUpload
                 formik={formik}
                 name="video"
-                label="Category Video URL"
-                type="url"
+                label="Category Video"
+                uploadPath={UPLOAD_PATHS.categories.video}
+                mediaType="video"
+                previewMode="full"
               />
             </FormFullWidth>
           </div>
