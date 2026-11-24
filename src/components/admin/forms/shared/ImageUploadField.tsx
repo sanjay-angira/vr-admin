@@ -26,12 +26,12 @@ const IMAGE_TYPES = [
   "image/jpg",
   "image/png",
   "image/gif",
-  "image/bmp",
   "image/webp",
   "image/svg+xml",
   "image/tiff",
   "image/heic",
   "image/heif",
+  "image/avif",
 ];
 
 function ImageFullView({
@@ -148,7 +148,9 @@ function ImageUploadModal({
     if (!file) return;
 
     if (mediaType === "image" && !IMAGE_TYPES.includes(file.type)) {
-      setError("Only image files are allowed.");
+      setError(
+        "Unsupported image format. Use JPEG, PNG, WebP, GIF, TIFF, SVG, HEIC, HEIF, or AVIF."
+      );
       return;
     }
 
