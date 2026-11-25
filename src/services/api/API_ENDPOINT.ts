@@ -166,15 +166,6 @@ export const API_ENDPOINTS = {
     DELETE: (id: number | string) => `banners/${id}`,
   },
 
-  CMS_SECTIONS: {
-    LIST: "cms-sections",
-    CREATE: "cms-sections",
-    REORDER: "cms-sections/reorder",
-    DETAILS: (id: number | string) => `cms-sections/${id}`,
-    UPDATE: (id: number | string) => `cms-sections/${id}`,
-    DELETE: (id: number | string) => `cms-sections/${id}`,
-  },
-
   CMS_PAGES: {
     LIST: "cms-pages",
     CREATE: "cms-pages",

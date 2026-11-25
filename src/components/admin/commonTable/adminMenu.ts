@@ -78,11 +78,6 @@ export const adminMenuSections: AdminMenuSection[] = [
         href: "/reviews",
         icon: "star",
       },
-      {
-        label: "Website layout",
-        href: "/website-layout",
-        icon: "layout-template",
-      },
     ],
   },
   {

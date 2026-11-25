@@ -32,7 +32,6 @@ export type AdminModuleKey =
   | "blog-categories"
   | "blog-tags"
   | "reviews"
-  | "website-layout"
   | "users"
   | "customers"
   | "delete-requests"
@@ -195,57 +194,6 @@ export const adminModuleTableConfig: Record<
     columns: CmsPagesComponentColumns,
     actions: ["add", "view", "edit", "delete"],
     addLabel: "Add page",
-  },
-  "website-layout": {
-    label: "Website Layout",
-    description: "Manage homepage sections",
-    apiPath: "cms-sections",
-    columns: [
-      {
-        label: "ID",
-        property: "id",
-        type: "text",
-        datatype: "id",
-        visible: true,
-      },
-      {
-        label: "Title",
-        property: "title",
-        type: "text",
-        datatype: "title",
-        visible: true,
-      },
-      {
-        label: "Type",
-        property: "type",
-        type: "text",
-        datatype: "type",
-        visible: true,
-      },
-      {
-        label: "Status",
-        property: "status",
-        type: "text",
-        datatype: "status",
-        visible: true,
-      },
-      {
-        label: "Position",
-        property: "position",
-        type: "text",
-        datatype: "text",
-        visible: true,
-      },
-      {
-        label: "Actions",
-        property: "actions",
-        type: "button",
-        datatype: "button",
-        visible: true,
-      },
-    ],
-    actions: ["add", "view", "edit", "delete"],
-    addLabel: "Add section",
   },
 };
 
